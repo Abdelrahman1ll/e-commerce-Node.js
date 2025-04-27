@@ -133,7 +133,7 @@ const setImageUrl = (doc) => {
   if (doc.image) {
     // التعديل: التحقق من أن المسار ليس URL مكتمل
     if (!doc.image.startsWith('http')) {
-      const imageUrl = `${process.env.BASE_URL}/${doc.image}`;
+      const imageUrl = `https://e-commerce-node-js-tan.vercel.app/${doc.image}`;
       doc.image = imageUrl;
     }
   }

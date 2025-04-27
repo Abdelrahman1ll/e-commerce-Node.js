@@ -16,6 +16,7 @@ const Routers = require("./routes/index");
 
 const PORT = process.env.PORT || 5000;
 
+
 connectDB();
 const app = express();
 app.use(express.json());
@@ -28,7 +29,7 @@ app.use(bodyParser.json()); // بيسمح للمتصفحات بالا��تج�
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(express.static(path.join(__dirname, "uploads/Products"))); // ده لي الصور اللي فيها البيانات
 app.use(express.static(path.join(__dirname, "uploads/Maintenance"))); // ده لي الصور اللي فيها البيانات
-
+// app.use(express.static(path.join(__dirname, 'public')));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   console.log(`Mode : ${process.env.NODE_ENV}`.yellow);

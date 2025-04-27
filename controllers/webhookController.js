@@ -2,7 +2,7 @@ const { Order } = require("../models/Order");
 const asyncHandler = require("express-async-handler");
 const crypto = require("crypto");
 const querystring = require('querystring');
-const payload = querystring.stringify({ foo: 'bar', baz: 'qux' });
+
 const _ = require("underscore");
 
 const kashierWebhook = asyncHandler(async (req, res) => {
@@ -10,7 +10,7 @@ const kashierWebhook = asyncHandler(async (req, res) => {
   data.signatureKeys.sort();
 
   const objectSignaturePayload = _.pick(data, data.signatureKeys);
-  const signaturePayload = payload.stringify(objectSignaturePayload);
+  const signaturePayload = querystring.stringify(objectSignaturePayload);
   const signature = crypto
 
     .createHmac("sha256", PaymentApiKey)
