@@ -141,7 +141,7 @@ const setImageUrl = (doc) => {
     const images = [];
     doc.images.forEach((image) => {
       if (!image.startsWith('http')) {
-        const imageUrl = `${process.env.BASE_URL}/${image}`;
+        const imageUrl = `https://e-commerce-node-js-tan.vercel.app/${image}`;
         images.push(imageUrl);
       } else {
         images.push(image);
