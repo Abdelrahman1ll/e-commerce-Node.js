@@ -1,13 +1,11 @@
 {
-  "name": "back-end",
-  "version": "1.0.0",
-  "main": "index.js",
+ 
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "SET NODE_ENV=production & node index.js",
+    "start": "SET NODE_ENV=production & node index.js"
   },
   "engines": {
-    "node": "22.13.1"
+    "node": ">=22.0.0 <23.0.0"
   },
   "keywords": [],
   "author": "",
