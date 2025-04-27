@@ -6,6 +6,9 @@
     "dev": "nodemon server",
     "start": "SET NODE_ENV=production & node server.js"
   },
+  "engines": {
+    "node": "v22.13.1"
+  },
   "keywords": [],
   "author": "",
   "license": "Proprietary",
