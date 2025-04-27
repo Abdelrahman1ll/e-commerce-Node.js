@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server",
-    "start": "SET NODE_ENV=production & node server.js"
+    "dev": "nodemon index.js",
+    "start": "SET NODE_ENV=production & node index.js"
   },
   "engines": {
     "node": "22.13.1"
