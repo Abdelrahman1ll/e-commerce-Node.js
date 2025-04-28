@@ -113,57 +113,43 @@ productSchema.index(
   }
 );
 
+
+
 // const setImageUrl = (doc) => {
 //   if (doc.image) {
-//     const imageUrl = `${process.env.BASE_URL}/${doc.image}`;
-//     doc.image = imageUrl;
-//   }
+//     // التعديل: التحقق من أن المسار ليس URL مكتمل
+//     if (!doc.image.startsWith('http')) {
+//       const imageUrl = `${doc.image}`;
+//       doc.image = imageUrl;
+//     }
+//   }//https://e-commerce-node-js-tan.vercel.app/
 //   if (doc.images) {
 //     const images = [];
 //     doc.images.forEach((image) => {
-//       const imageUrl = `${process.env.BASE_URL}/${image}`;
-//       images.push(imageUrl);
+//       if (!image.startsWith('http')) {
+//         const imageUrl = `${image}`;
+//         images.push(imageUrl);
+//       } else {
+//         images.push(image);
+//       }
 //     });
 //     doc.images = images;
 //   }
 // };
 
 
-const setImageUrl = (doc) => {
-  if (doc.image) {
-    // التعديل: التحقق من أن المسار ليس URL مكتمل
-    if (!doc.image.startsWith('http')) {
-      const imageUrl = `https://e-commerce-node-js-tan.vercel.app/${doc.image}`;
-      doc.image = imageUrl;
-    }
-  }
-  if (doc.images) {
-    const images = [];
-    doc.images.forEach((image) => {
-      if (!image.startsWith('http')) {
-        const imageUrl = `https://e-commerce-node-js-tan.vercel.app/${image}`;
-        images.push(imageUrl);
-      } else {
-        images.push(image);
-      }
-    });
-    doc.images = images;
-  }
-};
 
 
 
 
 
+// productSchema.post("init", (doc) => {
+//   setImageUrl(doc);
+// });
 
-
-productSchema.post("init", (doc) => {
-  setImageUrl(doc);
-});
-
-productSchema.post("save", (doc) => {
-  setImageUrl(doc);
-});
+// productSchema.post("save", (doc) => {
+//   setImageUrl(doc);
+// });
 
 const Product = mongoose.model("Product", productSchema);
 

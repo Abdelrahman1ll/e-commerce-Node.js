@@ -46,7 +46,11 @@ const getProductById = getOne(Product);
  * @access  Private
 **/
 const createProduct = asyncHandler(async (req, res, next) => {
-  const {...productData } = req.body;
+  const {image,images,...productData } = req.body;
+
+  if(!images || images.length === 0 || !image || image.length === 0){
+    return next(new ApiError("Please upload at least one image", 400));
+  }
 
   const { error } = await ValidationCreateProduct(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
@@ -62,6 +66,8 @@ const cat = await Category.findById(req.body.Category);
   
   const product = await new Product({
     ...productData,
+    images,
+    image,
     brand:brandId._id,
     Category:cat._id,
   });
@@ -80,7 +86,7 @@ const cat = await Category.findById(req.body.Category);
  * @access  Private
 **/
 const updateProduct = asyncHandler(async (req, res, next) => {
-  const {...productData } = req.body;
+  const {image,images,...productData } = req.body;
   const productId = req.params.id;
 
   const { error } = await ValidationUpdateProduct(req.body);
@@ -110,6 +116,8 @@ const updateProduct = asyncHandler(async (req, res, next) => {
     productId,
     {
       ...productData,
+      images,
+      image,
       brand:brandId?._id,
       Category:cat?._id
     },

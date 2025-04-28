@@ -1,5 +1,4 @@
 {
- 
   "scripts": {
     "dev": "nodemon index.js",
     "start": "SET NODE_ENV=production & node index.js"
@@ -29,6 +28,7 @@
     "express-async-handler": "^1.2.0",
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
+    "googleapis": "^148.0.0",
     "helmet": "^8.0.0",
     "https": "^1.0.0",
     "joi": "^17.13.3",
