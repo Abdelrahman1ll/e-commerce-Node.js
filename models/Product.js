@@ -62,7 +62,6 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-
 const ValidationCreateProduct = (odj) => {
   const schema = Joi.object({
     title: Joi.string().min(3).required(),
@@ -74,7 +73,6 @@ const ValidationCreateProduct = (odj) => {
     price: Joi.number().required(),
     PriceBeforeDiscount: Joi.number(),
     quantity: Joi.number().required(),
-    
   });
   return schema.validate(odj);
 };
@@ -112,44 +110,6 @@ productSchema.index(
     partialFilterExpression: { slug: { $exists: true, $ne: null } },
   }
 );
-
-
-
-// const setImageUrl = (doc) => {
-//   if (doc.image) {
-//     // التعديل: التحقق من أن المسار ليس URL مكتمل
-//     if (!doc.image.startsWith('http')) {
-//       const imageUrl = `${doc.image}`;
-//       doc.image = imageUrl;
-//     }
-//   }//https://e-commerce-node-js-tan.vercel.app/
-//   if (doc.images) {
-//     const images = [];
-//     doc.images.forEach((image) => {
-//       if (!image.startsWith('http')) {
-//         const imageUrl = `${image}`;
-//         images.push(imageUrl);
-//       } else {
-//         images.push(image);
-//       }
-//     });
-//     doc.images = images;
-//   }
-// };
-
-
-
-
-
-
-
-// productSchema.post("init", (doc) => {
-//   setImageUrl(doc);
-// });
-
-// productSchema.post("save", (doc) => {
-//   setImageUrl(doc);
-// });
 
 const Product = mongoose.model("Product", productSchema);
 
