@@ -6,10 +6,6 @@ const {
   createProduct,
   updateProduct,
 } = require("../controllers/productControllers");
-// const {
-//   uploadProductImages,
-//   resizeProductImages,
-// } = require("../controllers/upload");
 const { uploadImagesToDrive,uploadProductImages,resizeProductImages } = require("../controllers/uploadGoogle");
 const { verifyToken, authorize } = require("../middleware/verifyToken");
 
