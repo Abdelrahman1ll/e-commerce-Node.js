@@ -7,7 +7,7 @@ const { Readable } = require("stream");
 const path = require("path");
 
 // Use memory storage so file.buffer is available
-const upload = multer({ storage: multer.memoryStorage() }).single("image");
+const upload = multer({ storage: multer.memoryStorage() });
 
 
 // Google Drive API setup
@@ -41,10 +41,7 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
 
   );
 
-  // Attach the first image as the main image
-  if (req.files.image) {
-    req.files.image = req.files;
-  }
+  
 
   next();
 });
