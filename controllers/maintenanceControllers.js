@@ -48,7 +48,7 @@ const getUserMaintenance = asyncHandler(async (req, res) => {
  */
 const createMaintenance = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
-  const { ...Maintenancedata } = req.body;
+  const {image, ...Maintenancedata } = req.body;
   const { error } = validateMaintenance(req.body);
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
@@ -65,6 +65,7 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
     user: userId,
     orderNumber:newOrderNumber,
     ...Maintenancedata,
+    image:image,
   });
 
    const transporter = nodemailer.createTransport({

@@ -7,7 +7,8 @@ const { Readable } = require("stream");
 const path = require("path");
 
 // Use memory storage so file.buffer is available
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage() }).single("image");
+
 
 // Google Drive API setup
 const KEYFILEPATH = path.join(__dirname, "../myproject-455905-6b2ee3b7cbbd.json");
@@ -29,13 +30,22 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
     req.files.images.map(async ({ originalname, buffer }) => {
       const ext = path.extname(originalname) || ".jpeg";
       const filename = `product-${uuidv4()}${ext}`;
+
       const resizedBuffer = await sharp(buffer)
         .resize(800, 800)
         .jpeg({ quality: 90 })
         .toBuffer();
       return { originalname: filename, mimetype: "image/jpeg", buffer: resizedBuffer };
     })
+
+
   );
+
+  // Attach the first image as the main image
+  if (req.files.image) {
+    req.files.image = req.files;
+  }
+
   next();
 });
 
