@@ -87,3 +87,50 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
   req.body.image = urls[0] || null; // main image
   next();
 });
+
+
+
+
+// 4) Middleware: upload single image (e.g., for repair feature)
+exports.uploadSingleImage = upload.single("image"); // اسم الفيلد هو "images" (صورة واحدة)
+
+exports.resizeAndUploadSingleImage = asyncHandler(async (req, res, next) => {
+  if (!req.file) return next();
+
+  const folderId = "1IwjWIlbN1x7xEm-EBo3yTo84u13dBwMA";
+  await drive.files.get({ fileId: folderId, fields: "id", supportsAllDrives: true });
+
+  const ext = path.extname(req.file.originalname) || ".jpeg";
+  const filename = `repair-${uuidv4()}${ext}`;
+
+  const resizedBuffer = await sharp(req.file.buffer)
+    .resize(800, 800)
+    .jpeg({ quality: 90 })
+    .toBuffer();
+
+  const createRes = await drive.files.create({
+    resource: { name: filename, parents: [folderId] },
+    media: { mimeType: "image/jpeg", body: Readable.from(resizedBuffer) },
+    fields: "id",
+    supportsAllDrives: true,
+  });
+
+  const fileId = createRes.data.id;
+
+  await drive.permissions.create({
+    fileId,
+    requestBody: { role: "reader", type: "anyone" },
+    supportsAllDrives: true,
+  });
+
+  const meta = await drive.files.get({
+    fileId,
+    fields: "webContentLink",
+    supportsAllDrives: true,
+  });
+
+  // نحط اللينك في الريكويست علشان يتسجل مع العنصر
+  req.body.image = meta.data.webContentLink;
+
+  next();
+});
