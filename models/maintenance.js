@@ -69,7 +69,6 @@ const validateMaintenance = (odj) => {
   return schema.validate(odj);
 };
 
-
 const slugify = require("slugify");
 
 // توليد slug تلقائيًا قبل الحفظ
@@ -89,21 +88,6 @@ maintenanceSchema.index(
     partialFilterExpression: { slug: { $exists: true, $ne: null } },
   }
 );
-
-
-
-const setImageUrl = (doc) => {
-  if (doc.image) {
-    const imageUrl = `${process.env.BASE_URL}/${doc.image}`;
-    doc.image = imageUrl;
-  }
-  
-};
-
-maintenanceSchema.post("init", (doc) => {
-  setImageUrl(doc);
-});
-
 
 const Maintenance = mongoose.model("Maintenance", maintenanceSchema);
 

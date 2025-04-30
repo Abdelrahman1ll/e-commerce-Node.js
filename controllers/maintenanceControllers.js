@@ -1,9 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
-const {
-  Maintenance,
-  validateMaintenance,
-} = require("../models/maintenance");
+const { Maintenance, validateMaintenance } = require("../models/maintenance");
 const { deleteOne, getAll } = require("./handlerFactory");
 const nodemailer = require("nodemailer");
 const { User } = require("../models/User");
@@ -15,13 +12,15 @@ const { User } = require("../models/User");
  * @access  Private
  */
 const getAllMaintenances = asyncHandler(async (req, res) => {
-  const maintenances = await Maintenance.find({ user: { $ne: null } }).populate("user", "-password -addresses").sort({ createdAt: -1 });
+  const maintenances = await Maintenance.find({ user: { $ne: null } })
+    .populate("user", "-password -addresses")
+    .sort({ createdAt: -1 });
   res.status(200).send({
     results: maintenances.length,
     data: maintenances,
     status: "success",
   });
-})
+});
 
 /**
  * @desc   get single maintenance
@@ -31,7 +30,9 @@ const getAllMaintenances = asyncHandler(async (req, res) => {
  */
 const getUserMaintenance = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const maintenance = await Maintenance.find({ user: userId }).sort({ createdAt: -1 });
+  const maintenance = await Maintenance.find({ user: userId }).sort({
+    createdAt: -1,
+  });
 
   res.status(200).send({
     results: maintenance.length,
@@ -48,7 +49,7 @@ const getUserMaintenance = asyncHandler(async (req, res) => {
  */
 const createMaintenance = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
-  const {image, ...Maintenancedata } = req.body;
+  const { image, ...Maintenancedata } = req.body;
   const { error } = validateMaintenance(req.body);
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
@@ -58,36 +59,36 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
     return next(new ApiError("User not found", 404));
   }
   const lastOrder = await Maintenance.findOne().sort({ orderNumber: -1 });
-    const newOrderNumber = lastOrder?.orderNumber
-      ? lastOrder.orderNumber + 1
-      : 1001;
+  const newOrderNumber = lastOrder?.orderNumber
+    ? lastOrder.orderNumber + 1
+    : 1001;
   const maintenance = await Maintenance.create({
     user: userId,
-    orderNumber:newOrderNumber,
+    orderNumber: newOrderNumber,
     ...Maintenancedata,
-    image:image,
+    image,
   });
 
-   const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: true, // true for 465, false for other ports
-  
-      tls: {
-        rejectUnauthorized: false, // ✅ تجاوز مشكلة الشهادة
-      },
-    });
-  
-    const mailOptions = {
-      from: `My Company <${process.env.EMAIL_USER}>`,
-      to: "abdoabdoyytt5678@gmail.com",
-      subject: `🛍️ طلب صيانة جديد من ${user.name}`,
-      html: `
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: true, // true for 465, false for other ports
+
+    tls: {
+      rejectUnauthorized: false, // ✅ تجاوز مشكلة الشهادة
+    },
+  });
+
+  const mailOptions = {
+    from: `My Company <${process.env.EMAIL_USER}>`,
+    to: "abdoabdoyytt5678@gmail.com",
+    subject: `🛍️ طلب صيانة جديد من ${user.name}`,
+    html: `
       <html dir="rtl">
         <head>
           <meta charset="UTF-8" />
@@ -138,20 +139,18 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
         </body>
       </html>
     `,
-    };
-    
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) console.error("Error sending mail:", error);
-      else console.log("Email sent:", info.response);
-    });
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) console.error("Error sending mail:", error);
+    else console.log("Email sent:", info.response);
+  });
 
   res.status(201).send({
     data: maintenance,
     status: "success",
   });
 });
-
-
 
 /**
  * @desc   delete single maintenance

@@ -8,8 +8,10 @@ const {
 } = require("../controllers/maintenanceControllers");
 
 const { verifyToken, authorize } = require("../middleware/verifyToken");
-const { processSingleImage,uploadSingleImage} = require("../controllers/uploadGoogle");
-
+const {
+  uploadSingleImage,
+  resizeAndUploadSingleImage,
+} = require("../controllers/uploadGoogle");
 
 router.route("/user").get(verifyToken, authorize("user"), getUserMaintenance);
 
@@ -22,7 +24,7 @@ router
     verifyToken,
     authorize("user"),
     uploadSingleImage,
-    processSingleImage,
+    resizeAndUploadSingleImage,
     createMaintenance
   );
 

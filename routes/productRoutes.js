@@ -6,7 +6,11 @@ const {
   createProduct,
   updateProduct,
 } = require("../controllers/productControllers");
-const { uploadImagesToDrive,uploadProductImages,resizeProductImages } = require("../controllers/uploadGoogle");
+const {
+  uploadProductImages,
+  resizeProductImages,
+  uploadImagesToDrive,
+} = require("../controllers/uploadGoogle");
 const { verifyToken, authorize } = require("../middleware/verifyToken");
 
 router

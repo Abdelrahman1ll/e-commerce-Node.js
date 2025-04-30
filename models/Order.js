@@ -4,7 +4,6 @@ const orderSchema = new mongoose.Schema({
   orderNumber: {
     type: Number,
     unique: true,
-
   },
   user: {
     type: mongoose.Schema.ObjectId,
@@ -32,7 +31,6 @@ const orderSchema = new mongoose.Schema({
   deliveryPrice: {
     type: Number,
     default: 0.0,
-
   },
   totalCartPrice: {
     type: Number,
@@ -64,11 +62,14 @@ const orderSchema = new mongoose.Schema({
 });
 orderSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'user',
-    select: 'name email lastName number -_id',
+    path: "user",
+    select: "name email lastName number -_id",
   }).populate({
-    path: 'cartItems.product',
-    
+    path: "cartItems.product",
+    populate: {
+      path: "Category",
+      model: "Category",
+    },
   });
 
   next();
