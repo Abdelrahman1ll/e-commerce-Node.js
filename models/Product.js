@@ -51,6 +51,7 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  dleteImg: [String],
   averageRating: {
     type: Number,
     set: (val) => Math.round(val * 10) / 10, // 3.6666 * 10 = 36.666  = 37 = 3.7
@@ -88,6 +89,11 @@ const ValidationUpdateProduct = (odj) => {
     price: Joi.number(),
     PriceBeforeDiscount: Joi.number(),
     quantity: Joi.number(),
+    // إذا كنت تستخدم Joi
+    dleteImg: Joi.alternatives().try(
+      Joi.array().items(Joi.string()),
+      Joi.string() // عشان لو جاية واحدة فقط
+    ),
   });
   return schema.validate(odj);
 };

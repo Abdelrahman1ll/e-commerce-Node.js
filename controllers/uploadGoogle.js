@@ -24,7 +24,7 @@ const drive = google.drive({ version: "v3", auth });
 // Product image upload to handle file uploads and resizing
 exports.uploadProductImages = upload.fields([
   { name: "image", maxCount: 1 },
-  { name: "images", maxCount: 5 },
+  { name: "images", maxCount: 4 },
 ]);
 
 // Product image upload to resize images before uploading to Google Drive
@@ -68,22 +68,39 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
   next();
 });
 
-
-// Product image upload to upload images to Google Drive
+// Upload to Google Drive
 exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
   const folderId = "1IwjWIlbN1x7xEm-EBo3yTo84u13dBwMA";
 
-  // التأكد من وجود المجلد في Google Drive
+  // تأكد من وجود المجلد
   await drive.files.get({
     fileId: folderId,
     fields: "id",
     supportsAllDrives: true,
   });
 
+  let UpdateImgs = [];
+
+  if (req.params.id) {
+    // تحديث منتج موجود
+    UpdateImgs = await Product.findById(req.params.id);
+    if (!UpdateImgs) {
+      return next(new Error("المنتج غير موجود"));
+    }
+
+    const dleteImg = req.body.dleteImg || [];
+
+    // فلترة الصور الحالية لإزالة الصور اللي اتحذفت
+    UpdateImgs.images = UpdateImgs.images.filter(
+      (img) => !dleteImg.includes(img)
+    );
+
+    // حفظ التحديث
+    await UpdateImgs.save();
+  }
   // رفع الصور الإضافية الجديدة
-  let newUrls = [];
   if (req.files?.images) {
-    newUrls = await Promise.all(
+    const newUrls = await Promise.all(
       req.files.images.map(async (file) => {
         const { originalname, mimetype, buffer } = file;
         const createRes = await drive.files.create({
@@ -93,7 +110,6 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
           supportsAllDrives: true,
         });
         const fileId = createRes.data.id;
-
         await drive.permissions.create({
           fileId,
           requestBody: { role: "reader", type: "anyone" },
@@ -108,54 +124,16 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
         return meta.data.webContentLink;
       })
     );
-  }
-
-  // التحقق من إذا كان تحديث أو إضافة
-  if (req.params.id) {
-    // تحديث منتج موجود
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      // إضافة الصور الجديدة للصور القديمة
-      req.body.images = [...product.images, ...newUrls];
+    if (UpdateImgs && UpdateImgs.images) {
+      // إذا كان تحديث، أضف الصور الجديدة للصور القديمة
+      req.body.images = [...UpdateImgs.images, ...newUrls];
+      req.body.image = newUrls[0] || UpdateImgs.image; // استخدم أول صورة جديدة أو الصورة القديمة
+      req.body.dleteImg = [];
     } else {
+      // إذا كان إضافة منتج جديد
       req.body.images = newUrls;
+      req.body.image = newUrls[0] || null; // استخدم أول صورة جديدة أو null
     }
-  } else {
-    // إضافة منتج جديد
-    req.body.images = newUrls;
-  }
-
-  // التعامل مع الصورة الرئيسية
-  if (req.files?.image) {
-    const mainImageFile = req.files.image[0];
-    const { originalname, mimetype, buffer } = mainImageFile;
-    const createRes = await drive.files.create({
-      resource: { name: originalname, parents: [folderId] },
-      media: { mimeType: mimetype, body: Readable.from(buffer) },
-      fields: "id",
-      supportsAllDrives: true,
-    });
-    const fileId = createRes.data.id;
-
-    await drive.permissions.create({
-      fileId,
-      requestBody: { role: "reader", type: "anyone" },
-      supportsAllDrives: true,
-    });
-
-    const meta = await drive.files.get({
-      fileId,
-      fields: "webContentLink",
-      supportsAllDrives: true,
-    });
-    req.body.image = meta.data.webContentLink;
-  } else if (req.params.id) {
-    // إذا كان تحديث ومفيش صورة رئيسية جديدة، حافظ على القديمة
-    const product = await Product.findById(req.params.id);
-    req.body.image = product ? product.image : null;
-  } else {
-    // إذا كان منتج جديد ومفيش صورة رئيسية، استخدم أول صورة إضافية
-    req.body.image = newUrls[0] || null;
   }
 
   next();
@@ -163,7 +141,6 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
 
 // Middleware to upload a single image to Google Drive
 exports.uploadSingleImage = upload.single("image");
-
 
 // Middleware to resize and upload a single image to Google Drive
 exports.resizeAndUploadSingleImage = asyncHandler(async (req, res, next) => {
