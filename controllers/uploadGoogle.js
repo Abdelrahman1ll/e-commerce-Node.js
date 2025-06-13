@@ -94,7 +94,9 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
     UpdateImgs.images = UpdateImgs.images.filter(
       (img) => !dleteImg.includes(img)
     );
-    UpdateImgs.image =[]
+    UpdateImgs.image = UpdateImgs.images.filter(
+      (img) => !dleteImg.includes(img)
+    );
     // حفظ التحديث
     await UpdateImgs.save();
   }
@@ -127,7 +129,7 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
     if (UpdateImgs && UpdateImgs.images) {
       // إذا كان تحديث، أضف الصور الجديدة للصور القديمة
       req.body.images = [...UpdateImgs.images, ...newUrls];
-      req.body.image = newUrls[0] || UpdateImgs.image; // استخدم أول صورة جديدة أو الصورة القديمة
+      req.body.image = [...UpdateImgs.image, ...newUrls]; // استخدم أول صورة جديدة أو الصورة القديمة
       req.body.dleteImg = [];
     } else {
       // إذا كان إضافة منتج جديد
