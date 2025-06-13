@@ -8,7 +8,7 @@ const { Category } = require("../models/category");
 const { Brand } = require("../models/brand");
 const ApiError = require("../utils/ApiError");
 const ApiFeatures = require("../utils/ApiFeatures");
-const { deleteOne, getOne } = require("./handlerFactory");
+const { getOne } = require("./handlerFactory");
 const fs = require("fs").promises;
 const path = require("path");
 /**
@@ -50,9 +50,9 @@ const getProductById = getOne(Product);
  * @access  Private
  **/
 const createProduct = asyncHandler(async (req, res, next) => {
-  const { image, images, ...productData } = req.body;
+  const { images, ...productData } = req.body;
 
-  if (!images || images.length === 0 || !image || image.length === 0) {
+  if (!images || images.length === 0) {
     return next(new ApiError("Please upload at least one image", 400));
   }
 
@@ -71,7 +71,6 @@ const createProduct = asyncHandler(async (req, res, next) => {
   const product = await new Product({
     ...productData,
     images,
-    image,
     brand: brandId._id,
     Category: cat._id,
   });
@@ -90,7 +89,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
  * @access  Private
  **/
 const updateProduct = asyncHandler(async (req, res, next) => {
-  const { image, images, ...productData } = req.body;
+  const { images, ...productData } = req.body;
   const productId = req.params.id;
 
   const { error } = await ValidationUpdateProduct(req.body);
@@ -120,7 +119,6 @@ const updateProduct = asyncHandler(async (req, res, next) => {
     {
       ...productData,
       images,
-      image,
       brand: brandId?._id,
       Category: cat?._id,
     },

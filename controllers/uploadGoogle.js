@@ -22,10 +22,7 @@ const auth = new google.auth.GoogleAuth({
 const drive = google.drive({ version: "v3", auth });
 
 // Product image upload to handle file uploads and resizing
-exports.uploadProductImages = upload.fields([
-  { name: "image", maxCount: 1 },
-  { name: "images", maxCount: 4 },
-]);
+exports.uploadProductImages = upload.fields([{ name: "images", maxCount: 4 }]);
 
 // Product image upload to resize images before uploading to Google Drive
 exports.resizeProductImages = asyncHandler(async (req, res, next) => {
@@ -48,21 +45,6 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
         };
       })
     );
-  }
-
-  // معالجة الصورة الرئيسية
-  if (req.files.image) {
-    const ext = path.extname(req.files.image[0].originalname) || ".jpeg";
-    const filename = `product-${uuidv4()}${ext}`;
-    const resizedBuffer = await sharp(req.files.image[0].buffer)
-      .resize(800, 800)
-      .jpeg({ quality: 90 })
-      .toBuffer();
-    req.files.image[0] = {
-      originalname: filename,
-      mimetype: "image/jpeg",
-      buffer: resizedBuffer,
-    };
   }
 
   next();
@@ -94,9 +76,7 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
     UpdateImgs.images = UpdateImgs.images.filter(
       (img) => !dleteImg.includes(img)
     );
-    UpdateImgs.image = UpdateImgs.images.filter(
-      (img) => !dleteImg.includes(img)
-    );
+
     // حفظ التحديث
     await UpdateImgs.save();
   }
@@ -129,12 +109,10 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
     if (UpdateImgs && UpdateImgs.images) {
       // إذا كان تحديث، أضف الصور الجديدة للصور القديمة
       req.body.images = [...UpdateImgs.images, ...newUrls];
-      req.body.image = [...UpdateImgs.image, ...newUrls]; // استخدم أول صورة جديدة أو الصورة القديمة
       req.body.dleteImg = [];
     } else {
       // إذا كان إضافة منتج جديد
       req.body.images = newUrls;
-      req.body.image = newUrls[0] || null; // استخدم أول صورة جديدة أو null
     }
   }
 
