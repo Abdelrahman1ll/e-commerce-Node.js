@@ -94,7 +94,7 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
     UpdateImgs.images = UpdateImgs.images.filter(
       (img) => !dleteImg.includes(img)
     );
-
+    UpdateImgs.image =[]
     // حفظ التحديث
     await UpdateImgs.save();
   }
