@@ -8,7 +8,7 @@ const ApiError = require("../utils/ApiError");
 
 /**
  * @desc   Get All Category
- * @route   /api/category
+ * @route   /api/categorys
  * @method GET
  * @access Public
  **/
@@ -22,7 +22,7 @@ const GetAllCategory = asyncHandler(async (req, res) => {
 
 /**
  * @desc   Get Category By ID
- * @route   /api/category/:id
+ * @route   /api/categorys/:id
  * @method GET
  * @access Public
  **/
@@ -40,7 +40,7 @@ const GetCategoryById = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Create Category
- * @route   /api/category
+ * @route   /api/categorys
  * @method POST
  * @access Private
  **/
@@ -65,7 +65,7 @@ const CreateCategory = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Update Category
- * @route   /api/category/:id
+ * @route   /api/categorys/:id
  * @method PUT
  * @access Private
  **/
@@ -101,7 +101,7 @@ const UpdateCategory = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Delete Category
- * @route   /api/category/:id
+ * @route   /api/categorys/:id
  * @method DELETE
  * @access Private
  **/

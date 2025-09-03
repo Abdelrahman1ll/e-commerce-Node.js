@@ -9,6 +9,6 @@ const { verifyToken, authorize } = require("../middleware/verifyToken");
 
 router.route("/").post(verifyToken, authorize("admin"), DeliveryAndTax);
 
-router.route("/").get(verifyToken, authorize("admin"), getOeneDeliveryAndTax);
+router.route("/").get(verifyToken, getOeneDeliveryAndTax);
 
 module.exports = router;

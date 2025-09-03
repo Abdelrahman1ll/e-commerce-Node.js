@@ -8,7 +8,7 @@ const { Review } = require("../models/Review_Model");
 const { Product } = require("../models/Product_Model");
 /**
  * @desc   Create a new review
- * @route   POST /api/review
+ * @route   POST /api/reviews
  * @access  Private
  */
 const createReview = asyncHandler(async (req, res, next) => {
@@ -20,7 +20,7 @@ const createReview = asyncHandler(async (req, res, next) => {
 
   const existingReview = await Review.findOne({ user: userId, product });
   if (existingReview) {
-    return next(new ApiError("لقد قمت بتقييم هذا المنتج من قبل", 404));
+    return next(new ApiError("I have rated this product before", 404));
   }
 
   const newReview = await Review.create({
@@ -37,7 +37,7 @@ const createReview = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Update a review
- * @route   UPDATE /api/review/:Id
+ * @route   UPDATE /api/reviews/:Id
  * @access  Private
  */
 const UpdateReview = asyncHandler(async (req, res, next) => {
@@ -52,7 +52,9 @@ const UpdateReview = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Review not found", 404));
   }
   if (reviewExists.user._id.toString() !== userId) {
-    return next(new ApiError("غير مصرح لك بتعديل هذه التقييم", 403));
+    return next(
+      new ApiError("You are not authorized to edit this review.", 403)
+    );
   }
   const updatedReview = await Review.findByIdAndUpdate(
     id,
@@ -66,8 +68,8 @@ const UpdateReview = asyncHandler(async (req, res, next) => {
 });
 
 /**
- * @desc   Delete a review
- * @route   DELETE /api/review/:id
+ * @desc   Delete a reviews
+ * @route   DELETE /api/reviews/:id
  * @access  Private
  */
 
@@ -81,22 +83,21 @@ const deleteReview = asyncHandler(async (req, res, next) => {
 
   // 2. تحقق من وجود المراجعة
   if (!review) {
-    return next(new ApiError("المراجعة غير موجودة", 404));
+    return next(new ApiError("Review not found", 404));
   }
 
-  // 3. إذا كان المستخدم ليس مشرفًا، فتأكد أنه صاحب المراجعة
-  if (userRole !== "admin" && review.user._id.toString() !== userId) {
-    return next(new ApiError("غير مصرح لك بحذف هذه المراجعة", 403));
-  }
+  if (review.user._id.toString() !== userId && userRole !== "admin") {
+  return next(new ApiError("You are not allowed to delete this review", 403));
+}
 
   // 4. احذف المراجعة (مشرف أو صاحب المراجعة)
   await Review.deleteOne({ _id: reviewId });
-  res.status(204);
+  res.status(204).send();
 });
 
 /**
  * @desc   All reviews for this product
- * @route   GET /api/review/product/:productId
+ * @route   GET /api/reviews/product/:productId
  * @access  Public
  */
 const getProductReviews = asyncHandler(async (req, res, next) => {
@@ -108,7 +109,7 @@ const getProductReviews = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     amount: reviews.length,
-    data: { reviews },
+    data: reviews,
     status: "success",
   });
 });

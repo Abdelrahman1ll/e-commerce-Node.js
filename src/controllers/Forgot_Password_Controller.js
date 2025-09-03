@@ -10,7 +10,7 @@ const nodemailer = require("nodemailer");
 
 /**
  * @desc    Send Reset Code
- * @route   /api/user/forgot-password
+ * @route   /api/forgot-password
  * @method  POST
  * @access  Public
  **/
@@ -61,7 +61,7 @@ const sendResetCode = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Verify Reset Code
- * @route   /api/user/reset-code
+ * @route   /api/reset-code
  * @method  POST
  * @access  Public
  **/
@@ -94,7 +94,7 @@ const verifyResetCode = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Reset Password
- * @route   /api/user/reset-password
+ * @route   /api/reset-password
  * @method  POST
  * @access  Public
  **/

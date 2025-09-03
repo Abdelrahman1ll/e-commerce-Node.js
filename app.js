@@ -12,10 +12,6 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const Routers = require("./src/routes/index");
-const {
-  uploadProductImages,
-  uploadFilesFromRequest,
-} = require("./src/controllers/Upload_Driv");
 
 const app = express();
 

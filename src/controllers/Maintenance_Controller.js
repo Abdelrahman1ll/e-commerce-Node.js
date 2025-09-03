@@ -7,10 +7,9 @@ const {
 const nodemailer = require("nodemailer");
 const { User } = require("../models/User_Model");
 
-
 /**
  * @desc   get all maintenances
- * @route   /api/maintenance
+ * @route   /api/maintenances
  * @method  GET
  * @access  Private
  */
@@ -27,7 +26,7 @@ const getAllMaintenances = asyncHandler(async (req, res) => {
 
 /**
  * @desc   get single maintenance
- * @route   /api/maintenance/user
+ * @route   /api/maintenances/user
  * @method  GET
  * @access  Private
  */
@@ -46,7 +45,7 @@ const getUserMaintenance = asyncHandler(async (req, res) => {
 
 /**
  * @desc   create new maintenance
- * @route   /api/maintenance
+ * @route   /api/maintenances
  * @method  POST
  * @access  Private
  */
@@ -57,10 +56,7 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new ApiError("User not found", 404));
-  }
+
   const lastOrder = await Maintenance.findOne().sort({ orderNumber: -1 });
   const newOrderNumber = lastOrder?.orderNumber
     ? lastOrder.orderNumber + 1
@@ -71,6 +67,7 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
     ...Maintenancedata,
     image,
   });
+  const user = await User.findById(userId);
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -144,10 +141,12 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
     `,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) console.error("Error sending mail:", error);
-    else console.log("Email sent:", info.response);
-  });
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("📧 Email sent successfully");
+  } catch (err) {
+    console.error("❌ Error sending email:", err);
+  }
 
   res.status(201).send({
     data: maintenance,
@@ -157,16 +156,16 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   delete single maintenance
- * @route   /api/maintenance/:id
+ * @route   /api/maintenances/:id
  * @method  DELETE
  * @access  Private
  */
-const deleteMaintenance = asyncHandler(async (req, res) => {
+const deleteMaintenance = asyncHandler(async (req, res, next) => {
   const maintenance = await Maintenance.findByIdAndDelete(req.params.id);
   if (!maintenance) {
     return next(new ApiError("Maintenance not found", 404));
   }
-  res.status(200);
+  res.status(204).send();
 });
 
 module.exports = {

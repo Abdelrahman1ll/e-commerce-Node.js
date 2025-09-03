@@ -35,7 +35,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Get Product By ID
- * @route   /api/product/:id
+ * @route   /api/products/:id
  * @method  GET
  * @access  Public
  **/
@@ -53,7 +53,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Create Product
- * @route   /api/product
+ * @route   /api/products
  * @method  POST
  * @access  Private
  **/
@@ -91,7 +91,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Update Product
- * @route   /api/product/:id
+ * @route   /api/products/:id
  * @method  PUT
  * @access  Private
  **/
@@ -148,7 +148,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   Delete Product
- * @route   /api/product/:id
+ * @route   /api/products/:id
  * @method  DELETE
  * @access  Private
  **/

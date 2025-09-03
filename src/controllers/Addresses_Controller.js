@@ -98,7 +98,7 @@ const addAddressUpdate = asyncHandler(async (req, res) => {
 /**
  * @desc   Delete Address
  * @route   /api/address/:id
- * @method  DELETE
+ * @method  PUT
  * @access  Private
  **/
 const deleteAddress = asyncHandler(async (req, res) => {

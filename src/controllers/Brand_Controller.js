@@ -8,7 +8,7 @@ const ApiError = require("../utils/ApiError");
 
 /**
  * @desc   get Brands
- * @route   /api/brand
+ * @route   /api/brands
  * @method  GET
  * @access  Public
  **/
@@ -22,7 +22,7 @@ const getBrands = asyncHandler(async (req, res) => {
 
 /**
  * @desc   get Brand by id
- * @route   /api/brand/:id
+ * @route   /api/brands/:id
  * @method  GET
  * @access  Public
  **/
@@ -40,7 +40,7 @@ const getBrandById = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   create a Brand
- * @route   /api/brand
+ * @route   /api/brands
  * @method  POST
  * @access  Private
  **/
@@ -67,7 +67,7 @@ const createBrand = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   update a Brand
- * @route   /api/brand/:id
+ * @route   /api/brands/:id
  * @method  PUT
  * @access  Private
  **/
@@ -98,7 +98,7 @@ const updateBrand = asyncHandler(async (req, res, next) => {
 
 /**
  * @desc   delete a Brand
- * @route   /api/brand/:id
+ * @route   /api/brands/:id
  * @method  DELETE
  * @access  Private
  **/

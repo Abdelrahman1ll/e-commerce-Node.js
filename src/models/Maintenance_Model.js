@@ -58,7 +58,7 @@ const validateMaintenance = (odj) => {
       .valid("ثلاجة", "ديب فريزر", "غسالة اتوماتيك", "سخان", "بوتجاز"),
     description: Joi.string().required(),
     image: Joi.string().required(),
-    alias: Joi.string().required(),
+    alias: Joi.string().required().valid("المنزل", "العمل"),
     details: Joi.string().required(),
     phone: Joi.string()
       .pattern(/^01[0-25]\d{8}$/)

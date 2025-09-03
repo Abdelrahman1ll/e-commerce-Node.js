@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../../app");
+const app = require("../../../app");
 const insertProducts = require("../fixtures/Product_Fixture");
 const mongoose = require("mongoose");
 const { Product } = require("../../models/Product_Model");

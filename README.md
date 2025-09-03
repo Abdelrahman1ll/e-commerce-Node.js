@@ -61,11 +61,3 @@ KASHIER_API_KEY=
 KASHIER_MERCHANT_ID=
 
 npm run dev
-
-
-npm install --save-dev supertest // ده 
-
-
-"jest":{
-    "collectCoverage": true
-  }

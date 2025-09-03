@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { User } = require("../../models/User_Model");
-const app = require("../../app");
+const app = require("../../../app");
 
 async function createAndLoginAdmin() {
   // نمسح أي users قبل إنشاء admin
