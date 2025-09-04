@@ -48,7 +48,7 @@ const calcTotalCartPrice = async (cart) => {
 
 /**
  * @desc    Add product to cart
- * @route   POST /api/cart
+ * @route   POST /api/carts
  * @access  Private
  */
 const addToCart = asyncHandler(async (req, res, next) => {
@@ -57,19 +57,19 @@ const addToCart = asyncHandler(async (req, res, next) => {
 
   // التحقق من وجود الكمية وصحتها
   if (!quantity || isNaN(quantity) || quantity < 1) {
-    return next(new ApiError("الكمية المطلوبة غير صالحة", 400));
+    return next(new ApiError("The requested quantity is invalid", 400));
   }
 
   const parsedQuantity = parseInt(quantity);
 
   const product = await Product.findById(productId);
   if (!product) {
-    return next(new ApiError("المنتج غير موجود", 404));
+    return next(new ApiError("Product not available", 404));
   }
 
   let cart = await Cart.findOne({ cartOwner: userId });
   if (!cart) {
-     // 👇 هنا بنستخدم CreateCart بدل new Cart
+    // 👇 هنا بنستخدم CreateCart بدل new Cart
     cart = await Cart.create({ cartOwner: userId, products: [] });
   }
 
@@ -96,16 +96,16 @@ const addToCart = asyncHandler(async (req, res, next) => {
   // تحديث السعر الإجمالي
   await calcTotalCartPrice(cart);
   await cart.save();
-
+  await cart.populate("products.product");
   return res.status(200).json({
-    data: cart ,
+    data: cart,
     status: "success",
   });
 });
 
 /**
  * @desc    Get cart by user
- * @route   GET /api/cart
+ * @route   GET /api/carts
  * @access  Private
  */
 const getCart = asyncHandler(async (req, res, next) => {
@@ -119,14 +119,14 @@ const getCart = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     amount: cart.products.length,
-    data:cart,
+    data: cart,
     status: "success",
   });
 });
 
 /**
  * @desc    Update product quantity
- * @route   UPDATE /api/cart/:id
+ * @route   UPDATE /api/carts:id
  * @access  Private
  */
 const updateCartProductCount = asyncHandler(async (req, res, next) => {
@@ -158,18 +158,25 @@ const updateCartProductCount = asyncHandler(async (req, res, next) => {
   await cart.save();
 
   return res.status(200).json({
-    data: { cart },
+    data: cart,
     status: "success",
   });
 });
 
 /**
  * @desc   Remove product from cart
- * @route   DELETE /api/cart/:Id
+ * @route   DELETE /api/carts/:Id
  * @access  Private
  */
-const removeCartProduct = asyncHandler(async (req, res) => {
+const removeCartProduct = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
+  const ca = await Cart.findOne({ cartOwner: req.user._id });
+  const productExists = ca.products.some((p) => p._id.toString() === id);
+
+  if (!productExists) {
+    return next(new ApiError("Cart not found", 404));
+  }
+
   const cart = await Cart.findOneAndUpdate(
     { cartOwner: req.user._id },
     {
@@ -177,27 +184,19 @@ const removeCartProduct = asyncHandler(async (req, res) => {
     },
     { new: true }
   );
-  if (!cart) {
-    return next(
-      new ApiError(`No cart exist for this user: ${req.user._id}`, 404)
-    );
-  }
   await calcTotalCartPrice(cart);
   await cart.save();
-  return res.status(204).json({
-    status: "success",
-    message: "Product removed from cart successfully",
-  });
+  return res.status(204).send();
 });
 
 /**
  * @desc    Clear logged user cart
- * @route   DELETE /api/cart/:id
+ * @route   DELETE /api/carts:id
  * @access  Private
  */
 const clearLoggedUserCart = asyncHandler(async (req, res) => {
   await Cart.deleteOne({ cartOwner: req.user._id });
-  res.status(204);
+  res.status(204).send();
 });
 
 module.exports = {

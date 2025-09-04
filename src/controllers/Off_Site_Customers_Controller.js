@@ -26,7 +26,7 @@ const GetAllCustomer = asyncHandler(async (req, res, next) => {
  * @method POST
  * @access Private
  **/
-const createCustomer = asyncHandler(async (req, res) => {
+const createCustomer = asyncHandler(async (req, res, next) => {
   const { name, phoneNumber, data } = req.body;
   const { error } = validateCustomer(req.body);
   if (error) {
@@ -34,11 +34,11 @@ const createCustomer = asyncHandler(async (req, res) => {
   }
   const customerExists = await Customer.findOne({ phoneNumber });
   if (customerExists) {
-    throw new ApiError("Customer already exists.", 409);
+    return next(new ApiError("Customer already exists.", 409));
   }
   const customer = await Customer.create({ name, phoneNumber, data });
   res.status(201).send({
-    data: { customer },
+    data: customer ,
     status: "success",
   });
 });
@@ -77,9 +77,9 @@ const deleteCustomer = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const document = await Customer.findByIdAndDelete(id);
   if (!document) {
-    return next(new ApiError(`No document found for this ID ${id}`, 404));
+    return next(new ApiError(`No document found for this ID`, 404));
   }
-  res.status(204);
+  res.status(204).send();
 });
 
 module.exports = {

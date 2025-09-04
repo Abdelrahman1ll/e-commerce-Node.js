@@ -12,7 +12,7 @@ const { Product } = require("../models/Product_Model");
  * @route   GET /api/orders
  * @access  Private
  */
-const getAllOrders = asyncHandler(async (req, res) => {
+const getAllOrders = asyncHandler(async (req, res, next) => {
   const orders = await Order.find({});
   res.status(200).send({
     amount: orders.length,
@@ -21,19 +21,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @desc    Get order by ID
- * @route   GET /api/orders/:id
- * @access  Private
- */
-const getOrderById = asyncHandler(async (req, res, next) => {
-  const id = req.params.id;
-  const data = await Order.findById(id);
-  res.status(200).send({
-    data,
-    status: "success",
-  });
-});
+
 /**
  * @desc    Create a new order
  * @route   POST /api/orders
@@ -76,7 +64,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
     : 1001;
 
   // ✅ إنشاء الطلب
-  const order = Order.create({
+  const order = await Order.create({
     orderNumber: newOrderNumber,
     user: user._id,
     cartItems: cart.products || [],
@@ -86,7 +74,6 @@ const createOrder = asyncHandler(async (req, res, next) => {
     totalCartPrice: cart.totalCartPrice || 0,
     totalPrice: cart.totalPrice || 0,
   });
-  await order.save();
 
   // for (const item of cart.products) {
   //   const product = await Product.findById(item.product._id);
@@ -249,10 +236,12 @@ const createOrder = asyncHandler(async (req, res, next) => {
   `,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) console.error("Error sending mail:", error);
-    else console.log("Email sent:", info.response);
-  });
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("📧 Email sent successfully");
+  } catch (err) {
+    console.error("❌ Error sending email:", err);
+  }
 
   res.status(201).json({
     status: "success",
@@ -267,10 +256,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
  */
 const getAllOrdersByUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new ApiError("User not found", 404));
-  }
+  
   const orders = await Order.find({ user: userId }).sort({ createdAt: -1 });
   res.status(200).send({
     amount: orders.length,
@@ -284,7 +270,7 @@ const getAllOrdersByUser = asyncHandler(async (req, res) => {
  * @route   PUT /api/orders/:id/deliver
  * @access  Private
  */
-const updateOrderDeliveryStatus = asyncHandler(async (req, res) => {
+const updateOrderDeliveryStatus = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
   const order = await Order.findById(id);
@@ -310,7 +296,7 @@ const updateOrderDeliveryStatus = asyncHandler(async (req, res) => {
  * @route   PUT /api/orders/:id/pay
  * @access  Private
  */
-const updateOrderPaymentStatus = asyncHandler(async (req, res) => {
+const updateOrderPaymentStatus = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
   const order = await Order.findById(id);
@@ -333,7 +319,6 @@ const updateOrderPaymentStatus = asyncHandler(async (req, res) => {
 
 module.exports = {
   getAllOrders,
-  getOrderById,
   createOrder,
   getAllOrdersByUser,
   updateOrderDeliveryStatus,

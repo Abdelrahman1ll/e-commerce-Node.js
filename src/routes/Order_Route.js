@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const {
   getAllOrders,
-  getOrderById,
   createOrder,
   getAllOrdersByUser,
   updateOrderDeliveryStatus,
@@ -21,10 +20,6 @@ router
 router
   .route("/:id/pay")
   .put(verifyToken, authorize("admin"), updateOrderPaymentStatus);
-
-router
-  .route("/:id")
-  .get(verifyToken, authorize("admin"), getOrderById)
 
 router
   .route("/")
