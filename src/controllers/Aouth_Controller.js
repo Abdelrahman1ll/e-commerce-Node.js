@@ -132,8 +132,11 @@ const signup = asyncHandler(async (req, res, next) => {
     number,
     password,
   });
-
-  await sendVerificationEmail(user._id, user.email);
+  try {
+    await sendVerificationEmail(user._id, user.email);
+  } catch {
+    return next(new ApiError("Failed to send verification email", 502));
+  }
   user.password = undefined;
 
   res.status(201).json({
@@ -238,7 +241,11 @@ const resendVerification = asyncHandler(async (req, res, next) => {
   }
 
   // بعت لينك جديد
-  await sendVerificationEmail(user._id, user.email);
+  try {
+    await sendVerificationEmail(user._id, user.email);
+  } catch {
+    return next(new ApiError("Failed to send verification email", 502));
+  }
 
   res.status(200).json({
     status: "success",

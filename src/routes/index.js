@@ -12,7 +12,7 @@ const Routers = (app) => {
   app.use("/api/carts", require("./Cart_Route"));
   app.use("/api/orders", require("./Order_Route"));
   app.use("/api/maintenances", require("./Maintenance_Route"));
-  app.use("/api/kashier", require("./Card_Route"));
+  app.use("/api", require("./Order_Card_Route"));
   app.use("/api/delivery-tax", require("./Delivery_And_Tax_Route"));
   app.use("/api", require("./Forgot_Password_Route"));
   app.use("/api/customers", require("./Off_Site_Customers_Route"));

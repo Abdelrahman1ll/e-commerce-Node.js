@@ -74,16 +74,6 @@ const createOrder = asyncHandler(async (req, res, next) => {
     totalCartPrice: cart.totalCartPrice || 0,
     totalPrice: cart.totalPrice || 0,
   });
-
-  // for (const item of cart.products) {
-  //   const product = await Product.findById(item.product._id);
-  //   if (product) {
-  //     product.quantity -= item.count;
-  //     await product.save();
-  //   }
-
-  // }
-
   // تحديث المخزون باستخدام الجلسة
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -98,7 +88,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
     await session.commitTransaction();
   } catch (error) {
     await session.abortTransaction();
-    return next(new ApiError("فشل في تحديث المخزون", 500));
+    return next(new ApiError("Failed to update product quantity", 500));
   } finally {
     session.endSession();
   }
@@ -238,9 +228,8 @@ const createOrder = asyncHandler(async (req, res, next) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log("📧 Email sent successfully");
   } catch (err) {
-    console.error("❌ Error sending email:", err);
+    return next(new ApiError("Failed to send email", 502));
   }
 
   res.status(201).json({

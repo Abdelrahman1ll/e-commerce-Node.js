@@ -5,22 +5,11 @@ const { User } = require("../models/User_Model");
 const { Cart } = require("../models/Cart_Model");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const axios = require("axios");
 
-const MERCHANT_ID = process.env.KASHIER_MERCHANT_ID;
-const API_KEY = process.env.KASHIER_API_KEY;
-
-// Helper function to generate Kashier payment hash
-const generateKashierOrderHash = (order) => {
-  const mid = MERCHANT_ID;
-  const amount = order.totalPrice.toFixed(2);
-  const currency = "EGP";
-  const orderId = order._id.toString();
-  const secret = API_KEY;
-
-  const path = `/?payment=${mid}.${orderId}.${amount}.${currency}`;
-  return crypto.createHmac("sha256", secret).update(path).digest("hex");
-};
-
+const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
+const INTEGRATION_ID = process.env.INTEGRATION_ID;
+const PAYMOB_IFRAME_ID = process.env.PAYMOB_IFRAME_ID;
 /**
  * Create a new order
  * @route POST /api/order-card
@@ -53,10 +42,56 @@ const createOrder = asyncHandler(async (req, res, next) => {
     totalPrice: cart.totalPrice || 0,
   });
   await order.save();
-
   // Clear user's cart
   await Cart.findByIdAndDelete(cartId);
-  await user.save();
+
+   // Step A: Get auth_token from Paymob
+  const authResp = await axios.post("https://accept.paymob.com/api/auth/tokens", {
+    api_key: PAYMOB_API_KEY,
+  });
+  const authToken = authResp.data.token;
+
+  // Step B: Create order in Paymob
+  const orderResp = await axios.post("https://accept.paymob.com/api/ecommerce/orders", {
+    auth_token: authToken,
+    delivery_needed: "false",
+    amount_cents: order.totalPrice * 100, // بالقرش
+    currency: "EGP",
+    items: order.cartItems.map((item) => ({
+      name: item.product.title,
+      amount_cents: item.price * 100,
+      description: "Product",
+      quantity: item.count,
+    })),
+  });
+  const paymobOrderId = orderResp.data.id;
+
+  // Step C: Get payment key
+  const payKeyResp = await axios.post("https://accept.paymob.com/api/acceptance/payment_keys", {
+    auth_token: authToken,
+    amount_cents: order.totalPrice * 100,
+    expiration: 3600,
+    order_id: paymobOrderId,
+    billing_data: {
+      first_name: user.name?.split(" ")[0] || "First",
+      last_name: user.name?.split(" ")[1] || "Last",
+      email: user.email,
+      phone_number: shippingAddress.phone,
+      apartment: "NA",
+      floor: "NA",
+      street: shippingAddress.details,
+      building: "NA",
+      city: shippingAddress.city,
+      country: "EG",
+      state: "NA",
+    },
+    currency: "EGP",
+    integration_id: parseInt(INTEGRATION_ID),
+  });
+  const paymentToken = payKeyResp.data.token;
+
+  // Step D: Build iframe URL (use PAYMOB_IFRAME_ID not INTEGRATION_ID)
+  const iframeURL = `https://accept.paymob.com/api/acceptance/iframes/${PAYMOB_IFRAME_ID}?payment_token=${paymentToken}`;
 
   // Send confirmation email
   const transporter = nodemailer.createTransport({
@@ -180,25 +215,16 @@ const createOrder = asyncHandler(async (req, res, next) => {
   `,
   };
 
-  transporter.sendMail(mailOptions, (error) => {
-    if (error) console.error("Error sending email:", error);
-  });
-  const redirectUrl = `http://localhost:3000/user/order?display=popup`;
-  const merchantRedirectParam = encodeURIComponent(redirectUrl);
-  // Generate Kashier payment URL
-  const hash = generateKashierOrderHash(order);
-  const paymentUrl = `https://payments.kashier.io/?merchantId=${MERCHANT_ID}&orderId=${
-    order._id
-  }&amount=${order.totalPrice.toFixed(2)}&currency=EGP&hash=${hash}&mode=${
-    process.env.NODE_ENV === "production" ? "live" : "test"
-  }&merchantRedirect=${merchantRedirectParam}`;
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (err) {
+    return next(new ApiError("Failed to send email", 502));
+  }
 
   res.status(201).json({
     status: "success",
-    data: {
-      order,
-      paymentUrl,
-    },
+    data: order,
+    iframeURL,
   });
 });
 

@@ -8,7 +8,6 @@ const ApiError = require("../utils/ApiError");
 const ApiFeatures = require("../utils/ApiFeatures");
 const { Category } = require("../models/Category_Model");
 const { Brand } = require("../models/Brand_Model");
-const { mongoose } = require("mongoose");
 /**
  * @desc   Get Products
  * @route   /api/product
@@ -64,7 +63,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
     images = ["img1.png", "img2.png"]
   }
 
-  const { error } = await ValidationCreateProduct(req.body);
+  const { error } = ValidationCreateProduct({images, ...productData});
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   const cat = await Category.findById(req.body.category);
@@ -99,7 +98,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
   const { images, ...productData } = req.body;
   const productId = req.params.id;
 
-  const { error } = await ValidationUpdateProduct({
+  const { error } = ValidationUpdateProduct({
     ...productData,
     images,
     id: req.params.id

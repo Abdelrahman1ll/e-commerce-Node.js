@@ -88,7 +88,10 @@ const addToCart = asyncHandler(async (req, res, next) => {
     // إضافة المنتج بالكمية المحددة
     cart.products.push({
       product: productId,
-      price: product.price,
+      price:
+        product.PriceBeforeDiscount === 0
+          ? product.price
+          : product.PriceBeforeDiscount,
       count: parsedQuantity,
     });
   }
