@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon --legacy-watch index.js",
     "start:prod": "set NODE_ENV=production && node index.js",
     "test": "jest --runInBand",
     "test:watch": "jest --watchAll",

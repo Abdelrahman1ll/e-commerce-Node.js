@@ -9,8 +9,6 @@ const {
 } = require("../controllers/Order_Controller");
 const { verifyToken, authorize } = require("../middleware/verifyToken");
 
-
-
 router.route("/user").get(verifyToken, authorize("user"), getAllOrdersByUser);
 
 router

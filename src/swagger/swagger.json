@@ -702,13 +702,16 @@
             "schema": {
               "type": "object",
               "properties": {
+                "dleteImg": {
+                  "example": "any"
+                },
+                "images": {
+                  "example": "any"
+                },
                 "category": {
                   "example": "any"
                 },
                 "brand": {
-                  "example": "any"
-                },
-                "images": {
                   "example": "any"
                 },
                 "productData": {
@@ -776,13 +779,16 @@
             "schema": {
               "type": "object",
               "properties": {
+                "dleteImg": {
+                  "example": "any"
+                },
+                "images": {
+                  "example": "any"
+                },
                 "category": {
                   "example": "any"
                 },
                 "brand": {
-                  "example": "any"
-                },
-                "images": {
                   "example": "any"
                 },
                 "productData": {
@@ -805,7 +811,7 @@
         ]
       }
     },
-    "/api/All_Product_In_Category/{id}": {
+    "/api/product-category/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -822,11 +828,11 @@
           }
         },
         "tags": [
-          "All_Product_In_Category"
+          "Product-category"
         ]
       }
     },
-    "/api/All_Product_In_Brand/{id}": {
+    "/api/product-brand/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -843,11 +849,11 @@
           }
         },
         "tags": [
-          "All_Product_In_Brand"
+          "Product-brand"
         ]
       }
     },
-    "/api/Reviews/": {
+    "/api/reviews/": {
       "post": {
         "description": "",
         "parameters": [
@@ -893,7 +899,7 @@
         ]
       }
     },
-    "/api/Reviews/product/{id}": {
+    "/api/reviews/product/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -914,7 +920,7 @@
         ]
       }
     },
-    "/api/Reviews/{id}": {
+    "/api/reviews/{id}": {
       "put": {
         "description": "",
         "parameters": [
@@ -1399,37 +1405,6 @@
         ]
       }
     },
-    "/api/orders/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "tags": [
-          "Orders"
-        ]
-      }
-    },
     "/api/orders/": {
       "get": {
         "description": "",
@@ -1540,8 +1515,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           }
         },
         "tags": [
@@ -1615,7 +1590,7 @@
         ]
       }
     },
-    "/api/kashier/order-card": {
+    "/api/order-card": {
       "post": {
         "description": "",
         "parameters": [
@@ -1651,46 +1626,11 @@
           }
         },
         "tags": [
-          "Kashier"
+          "Order-card"
         ]
       }
     },
-    "/api/kashier/": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "x-kashier-signature",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "example": "any"
-                },
-                "event": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Kashier"
-        ]
-      }
-    },
-    "/api/delivery_Andtax/": {
+    "/api/delivery-tax/": {
       "post": {
         "description": "",
         "parameters": [
@@ -1726,7 +1666,7 @@
           }
         },
         "tags": [
-          "Delivery_Andtax"
+          "Delivery-tax"
         ]
       },
       "get": {
@@ -1749,7 +1689,7 @@
           }
         },
         "tags": [
-          "Delivery_Andtax"
+          "Delivery-tax"
         ]
       }
     },
@@ -2027,12 +1967,12 @@
       "description": "Operations about Products"
     },
     {
-      "name": "All_Product_In_Category",
-      "description": "Operations about All_Product_In_Category"
+      "name": "Product-category",
+      "description": "Operations about Product-category"
     },
     {
-      "name": "All_Product_In_Brand",
-      "description": "Operations about All_Product_In_Brand"
+      "name": "Product-brand",
+      "description": "Operations about Product-brand"
     },
     {
       "name": "Reviews",
@@ -2055,12 +1995,12 @@
       "description": "Operations about Maintenances"
     },
     {
-      "name": "Kashier",
-      "description": "Operations about Kashier"
+      "name": "Order-card",
+      "description": "Operations about Order-card"
     },
     {
-      "name": "Delivery_Andtax",
-      "description": "Operations about Delivery_Andtax"
+      "name": "Delivery-tax",
+      "description": "Operations about Delivery-tax"
     },
     {
       "name": "Forgot-password",

@@ -1,20 +1,19 @@
 # Use official Node.js image
 FROM node:24-alpine
 
-# Set working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# نسخ package.json & package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --production
+# تثبيت dependecies
+RUN npm install
 
-# Copy the rest of the app
+# تثبيت nodemon عشان نقدر نشغله داخل container
+RUN npm install -g nodemon
+
+# نسخ بقية الملفات
 COPY . .
 
-# Expose the port (default Express/NestJS: 3000)
-EXPOSE 3000
-
-# Start the app (لو NestJS غيّر لـ dist/main)
-CMD ["node", "index.js"]
+# تشغيل السيرفر
+CMD ["npm", "run", "dev"]

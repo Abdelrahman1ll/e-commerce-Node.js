@@ -14,7 +14,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Google Drive API setup
 const KEYFILEPATH = path.join(
   __dirname,
-  "../../vernal-reality-470923-a2-f8a1ae62aeae.json"
+  "../../apiKey.json"
 );
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 const auth = new google.auth.GoogleAuth({
@@ -54,10 +54,9 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
 
 // Upload to Google Drive
 exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
-  const folderId = "1HZhIBsneHmbGHrk06tAoBYubP2KLa1og"
   // تأكد من وجود المجلد
   await drive.files.get({
-    fileId: folderId,
+    fileId: process.env.FOLDER_ID,
     fields: "id",
     supportsAllDrives: true,
   });
@@ -109,7 +108,7 @@ exports.uploadImagesToDrive = asyncHandler(async (req, res, next) => {
       req.files.images.map(async (file) => {
         const { originalname, mimetype, buffer } = file;
         const createRes = await drive.files.create({
-          resource: { name: originalname, parents: [folderId] },
+          resource: { name: originalname, parents: [process.env.FOLDER_ID] },
           media: { mimeType: mimetype, body: Readable.from(buffer) },
           fields: "id",
           supportsAllDrives: true,

@@ -1,63 +1,75 @@
-📚 إدارة المحتوى:
+# 🛒 E-Commerce Backend (Node.js + Express + MongoDB)
 
-إنشاء/تعديل/حذف الكوميكس، الفصول، والفئات.
+## 📌 Overview
+This is the **backend** for an E-Commerce application built with:
+- **Node.js + Express** for API handling.
+- **MongoDB + Mongoose** for database.
+- **Docker** for containerization.
+- **Swagger** for API documentation.
+- **Jest + Supertest** for testing.
 
-دعم تعدد الوسائط (رفع الصور، PDF، إلخ) عبر Cloudinary.
+---
 
-💳 نظام مدفوعات آمن:
+## 🚀 Running the Project
 
-تكامل مع بوابات دفع مثل Stripe أو PayPal.
+### 1️⃣ Start the containers
+```bash
+docker-compose up --build
 
-تتبع المشتريات والاشتراكات.
 
-🔍 بحث ذكي:
+📦back end
+ ┣ 📂src
+ ┃ ┣ 📂config
+ ┃ ┣ 📂controllers
+ ┃ ┣ 📂middleware
+ ┃ ┣ 📂models
+ ┃ ┣ 📂routes
+ ┃ ┣ 📂swagger
+ ┃ ┣ 📂tests
+ ┃ ┃ ┣ 📂fixtures
+ ┃ ┃ ┣ 📂integration
+ ┃ ┃ ┗ 📂utils
+ ┃ ┗ 📂utils
+ ┣ 📜.dockerignore
+ ┣ 📜.env
+ ┣ 📜.gitignore
+ ┣ 📜apiKey.json
+ ┣ 📜app.js
+ ┣ 📜docker-compose.yml
+ ┣ 📜Dockerfile
+ ┣ 📜index.html
+ ┣ 📜index.js
+ ┣ 📜package-lock.json
+ ┣ 📜package.json
+ ┣ 📜README.md
+ ┗ 📜vercel.json
 
-فلترة الكوميكس حسب الفئة، التقييم، التاريخ، وغيرها.
 
-دعم البحث النصي باستخدام Elasticsearch (اختياري).
+# إيقاف وتشغيل مع إعادة build للصور (أول مرة أو بعد تعديل في Dockerfile)
+docker-compose up --build
 
-🤖 توصيات مخصصة:
+# تشغيل الحاويات المتوقفة (من غير build أو download جديد)
+docker-compose start
 
-خوارزميات توصية تعتمد على سلوك المستخدم.
+# إعادة تشغيل الحاويات (Stop + Start)
+docker-compose restart
 
-⚡ تحسين الأداء:
+# إيقاف الحاويات فقط (من غير مسح أي حاجة)
+docker-compose stop
 
-التخزين المؤقت (Redis) لتحسين سرعة الاستجابة.
+# تشغيل الحاويات وعرض الـ Logs قدامك (زي npm run dev)
+docker-compose up
 
-معالجة الأخطاء المركَّزة.
+# تشغيل الحاويات في الخلفية (بدون Logs)
+docker-compose up -d
 
-🛠️ التقنيات المستخدمة
-الفئة التقنيات
-الخادم Node.js, Express.js
-قاعدة البيانات MongoDB, Mongoose (ODM)
-المصادقة JWT, Bcrypt
-التخزين Cloudinary, AWS S3
-الدفع Stripe API
-الأدوات Docker, Redis, Swagger (للتوثيق)
+# إيقاف ومسح الحاويات والشبكات (لكن مش بيمسح الـ images ولا الـ volumes)
+docker-compose down
 
-src/  
-├── config/ # إعدادات قاعدة البيانات، البيئة، وغيرها  
-├── controllers/ # منطق التعامل مع الطلبات  
-├── models/ # نماذج MongoDB  
-├── routes/ # تعريفات مسارات API  
-├── middleware/ # middleware للمصادقة، التحقق، إلخ  
-├── utils/ # أدوات مساعدة (رفع الملفات، إرسال إيميلات)  
-├── tests/ # اختبارات الوحدة والتكامل  
-└── swagger/ # توثيق API
+# إيقاف ومسح الحاويات + الشبكات + الـ volumes
+docker-compose down -v
 
-🚀 كيفية التشغيل
-استنساخ المشروع:
-https://github.com/Abdelrahman1ll/e-commerce-Node.js.git
 
-npm install
+docker exec -it node-app npm run swagger
 
-MONGODB_URI=
-BASE_URL=
-JWT_SECRET=
-JWT_EXPIRES_IN=
-EMAIL_USER=
-EMAIL_PASS=
-KASHIER_API_KEY=
-KASHIER_MERCHANT_ID=
-
-npm run dev
+docker exec -it node-app npm run test

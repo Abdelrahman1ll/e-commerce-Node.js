@@ -59,8 +59,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
 const createProduct = asyncHandler(async (req, res, next) => {
   let { images, ...productData } = req.body;
   if (!images || images.length === 0) {
-  //  return next(new ApiError("Please upload at least one image", 400));
-    images = ["img1.png", "img2.png"]
+   return next(new ApiError("Please upload at least one image", 400));
   }
 
   const { error } = ValidationCreateProduct({images, ...productData});

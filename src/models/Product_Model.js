@@ -63,7 +63,7 @@ const ValidationCreateProduct = (odj) => {
   const schema = Joi.object({
     title: Joi.string().min(3).required(),
     description: Joi.string().required(),
-    images: Joi.array(), //.required(),
+    images: Joi.array().required(),
     brand: Joi.string()
       .pattern(/^[0-9a-fA-F]{24}$/) // regex للـ ObjectId
       .required(),
