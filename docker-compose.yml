@@ -1,14 +1,14 @@
 version: "3"
 services:
   app:
-    build: .
-    container_name: node-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: e-commerce-app
+    container_name: e-commerce
     restart: unless-stopped
     env_file:
       - .env
     ports:
       - "3000:3000"
-    # volumes:
-    #   - ./:/usr/src/app
-    #   - /usr/src/app/node_modules
     command: npm run dev
