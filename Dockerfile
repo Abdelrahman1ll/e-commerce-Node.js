@@ -1,16 +1,13 @@
 # Use official Node.js image
 FROM node:24-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # نسخ package.json & package-lock.json
 COPY package*.json ./
 
 # تثبيت dependecies
 RUN npm install
-
-# تثبيت nodemon عشان نقدر نشغله داخل container
-RUN npm install -g nodemon
 
 # نسخ بقية الملفات
 COPY . .

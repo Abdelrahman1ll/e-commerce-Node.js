@@ -46,7 +46,7 @@ docker-compose up --build
 
 
 # إيقاف وتشغيل مع إعادة build للصور (أول مرة أو بعد تعديل في Dockerfile)
-docker-compose up --build
+docker-compose -p ecommerce-app-container up --build
 
 # تشغيل الحاويات المتوقفة (من غير build أو download جديد)
 docker-compose start
