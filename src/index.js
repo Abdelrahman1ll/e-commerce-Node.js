@@ -1,5 +1,5 @@
 // index.js
-const connectDB = require("./src/config/dbConn");
+const connectDB = require("./config/dbConn");
 const app = require("./app");
 
 connectDB();

@@ -1,15 +1,22 @@
 services:
-  ecommerce:
+  e-commerce:
     container_name: ecommerce-app-container
-    image: ecommerce-app:latest
     build:
       context: .
-      dockerfile: Dockerfile
+      target: ${NODE_ENV:-development}
     volumes:
-      - .:/app
-      - /app/node_modules
+      - ./src:/app/src:ro
     ports:
       - "3000:3000"
-    command: npm run dev
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV:-development}
+    env_file:
+      - ./.env
+    command: >
+      sh -c "
+      if [ \"${NODE_ENV}\" = 'production' ]; then
+        npm start;
+      else
+        npm run dev;
+      fi
+      "

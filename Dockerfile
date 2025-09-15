@@ -1,16 +1,19 @@
-# Use official Node.js image
-FROM node:24-alpine
+FROM node:24-alpine as base
 
+
+FROM base as development
 WORKDIR /app
-
-# نسخ package.json & package-lock.json
 COPY package*.json ./
-
-# تثبيت dependecies
 RUN npm install
-
-# نسخ بقية الملفات
 COPY . .
-
-# تشغيل السيرفر
+EXPOSE 3000
 CMD ["npm", "run", "dev"]
+
+
+FROM base as production
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --only=production
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]

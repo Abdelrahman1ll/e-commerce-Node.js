@@ -29,47 +29,61 @@ docker-compose up --build
  ┃ ┃ ┣ 📂fixtures
  ┃ ┃ ┣ 📂integration
  ┃ ┃ ┗ 📂utils
- ┃ ┗ 📂utils
+ ┃ ┣ 📂utils
+ ┃ ┣ 📜app.js
+ ┃ ┗ 📜index.js
  ┣ 📜.dockerignore
  ┣ 📜.env
  ┣ 📜.gitignore
  ┣ 📜apiKey.json
- ┣ 📜app.js
  ┣ 📜docker-compose.yml
  ┣ 📜Dockerfile
  ┣ 📜index.html
- ┣ 📜index.js
  ┣ 📜package-lock.json
  ┣ 📜package.json
  ┣ 📜README.md
  ┗ 📜vercel.json
 
+# ===========================
+# Build and run containers (important the first time or after modifying the Dockerfile)
+# - NODE_ENV=development => run in development mode
+# - NODE_ENV=production  => run in production mode
+# This command builds a new image for each container and starts them immediately
+NODE_ENV=development docker-compose up --build   # Run containers in development mode with a new build
+NODE_ENV=production docker-compose up --build    # Run containers in production mode with a new build
 
-# إيقاف وتشغيل مع إعادة build للصور (أول مرة أو بعد تعديل في Dockerfile)
-docker-compose -p ecommerce-app-container up --build
+# ===========================
+# Start previously stopped containers (without building or pulling new images)
+NODE_ENV=production docker-compose start         # Start containers in production mode
 
-# تشغيل الحاويات المتوقفة (من غير build أو download جديد)
-docker-compose start
+# ===========================
+# Restart all containers (stop then start)
+NODE_ENV=production docker-compose restart       # Restart all containers in production mode
 
-# إعادة تشغيل الحاويات (Stop + Start)
-docker-compose restart
+# ===========================
+# Stop containers only (containers remain on the system for later start)
+NODE_ENV=production docker-compose stop          # Stop containers in production mode
 
-# إيقاف الحاويات فقط (من غير مسح أي حاجة)
-docker-compose stop
+# ===========================
+# Start containers and show logs in terminal (like `npm run dev`)
+NODE_ENV=production docker-compose up            # Run containers in production mode with logs
 
-# تشغيل الحاويات وعرض الـ Logs قدامك (زي npm run dev)
-docker-compose up
+# ===========================
+# Start containers in the background (without logs)
+NODE_ENV=production docker-compose up -d         # Run containers in detached mode (background)
 
-# تشغيل الحاويات في الخلفية (بدون Logs)
-docker-compose up -d
+# ===========================
+# Stop all containers and remove networks (images and volumes remain)
+NODE_ENV=production docker-compose down          # Stop and remove networks in production mode
 
-# إيقاف ومسح الحاويات والشبكات (لكن مش بيمسح الـ images ولا الـ volumes)
-docker-compose down
+# ===========================
+# Stop all containers, remove networks and volumes (delete stored data)
+NODE_ENV=production docker-compose down -v      # Stop and remove networks + volumes in production mode
 
-# إيقاف ومسح الحاويات + الشبكات + الـ volumes
-docker-compose down -v
+# ===========================
+# Run swagger script inside a specific container (here container name is node-app)
+NODE_ENV=production docker exec -it node-app npm run swagger  # Run swagger inside container
 
-
-docker exec -it node-app npm run swagger
-
-docker exec -it node-app npm run test
+# ===========================
+# Run project tests inside a specific container
+NODE_ENV=production docker exec -it node-app npm run test     # Run tests inside container

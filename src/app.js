@@ -1,17 +1,17 @@
 // app.js
 require("dotenv").config();
 const express = require("express");
-const ApiError = require("./src/utils/ApiError");
+const ApiError = require("./utils/ApiError");
 const cors = require("cors");
 const helmet = require("helmet");
 const path = require("path");
 const morgan = require("morgan");
 require("colors");
-const globalError = require("./src/middleware/errorMiddleware");
+const globalError = require("./middleware/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compression = require("compression");
-const Routers = require("./src/routes/index");
+const Routers = require("./routes/index");
 
 const app = express();
 
@@ -32,15 +32,16 @@ app.use(express.urlencoded({ extended: true, limit: "10kb" })); // ده لي ا�
 app.use(express.static(path.join(__dirname, "uploads/Products"))); // ده لي الصور اللي فيها البيانات
 app.use(express.static(path.join(__dirname, "uploads/Maintenance"))); // ده لي الصور اللي فيها البيانات
 
-// development
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
-  console.log(`Mode : ${process.env.NODE_ENV}`.yellow);
+  console.log(`Mode: ${process.env.NODE_ENV}`.yellow);
+} else {
+  console.log(`Mode: ${process.env.NODE_ENV || "production"}`.yellow);
 }
 
 app.get("/", (red, res, next) => {
   res.status(200).json({
-    message: "Welcome to the first API 🚀",
+    message: "Welcome to the first API prod 🚀",
   });
 });
 
@@ -50,7 +51,7 @@ Routers(app);
 // development
 if (process.env.NODE_ENV === "development") {
   const swaggerUi = require("swagger-ui-express");
-  const swaggerFile = require("./src/swagger/swagger.json");
+  const swaggerFile = require("./swagger/swagger.json");
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 }
 
