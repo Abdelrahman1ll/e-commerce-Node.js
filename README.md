@@ -39,6 +39,7 @@ docker-compose up --build
  ┣ 📜docker-compose.yml
  ┣ 📜Dockerfile
  ┣ 📜index.html
+ ┣ 📜index.js
  ┣ 📜package-lock.json
  ┣ 📜package.json
  ┣ 📜README.md

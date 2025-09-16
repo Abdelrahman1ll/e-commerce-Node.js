@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.get("/", (red, res, next) => {
   res.status(200).json({
-    message: "Welcome to the first API prod 🚀",
+    message: "Welcome to the first API 🚀",
   });
 });
 
