@@ -8,6 +8,7 @@ const ApiError = require("../utils/ApiError");
 const ApiFeatures = require("../utils/ApiFeatures");
 const { Category } = require("../models/Category_Model");
 const { Brand } = require("../models/Brand_Model");
+const redisClient = require("../config/redis");
 /**
  * @desc   Get Products
  * @route   /api/product
@@ -22,13 +23,30 @@ const { Brand } = require("../models/Brand_Model");
 // /api/products?title=abdo
 
 const getProducts = asyncHandler(async (req, res, next) => {
+
+const cacheKey = `products:${JSON.stringify(req.query)}`;
+
+const cachedData = await redisClient.get(cacheKey);
+
+if (cachedData) {
+    return res.status(200).send({
+      amount: JSON.parse(cachedData).length,
+      data: { products: JSON.parse(cachedData) },
+      status: "success",
+      source: "redis",
+    });
+  }
+
   const features = new ApiFeatures(Product.find(), req.query).filter().sort();
   const products = await features.query;
+
+  await redisClient.set(cacheKey, JSON.stringify(products));
 
   res.status(200).send({
     amount: products.length,
     data: { products },
     status: "success",
+    source: "database",
   });
 });
 
@@ -60,6 +78,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
   let { images, ...productData } = req.body;
   if (!images || images.length === 0) {
    return next(new ApiError("Please upload at least one image", 400));
+    // images = ["img.jpeg", "img2.jpeg"];
   }
 
   const { error } = ValidationCreateProduct({images, ...productData});
@@ -80,6 +99,11 @@ const createProduct = asyncHandler(async (req, res, next) => {
     brand: brandId._id,
     category: cat._id,
   });
+
+  const keys = await redisClient.keys("products:*");
+  for (const key of keys) {
+    await redisClient.del(key);
+  }
 
   res.status(201).send({
     data: product,
@@ -137,6 +161,11 @@ const updateProduct = asyncHandler(async (req, res, next) => {
       runValidators: true,
     }
   );
+
+  const keys = await redisClient.keys("products:*");
+  for (const key of keys) {
+    await redisClient.del(key);
+  }
 
   res.status(201).send({
     data: product,

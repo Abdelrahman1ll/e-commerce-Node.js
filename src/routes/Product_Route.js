@@ -21,7 +21,6 @@ router
     uploadProductImages,
     resizeProductImages,
     uploadImagesToDrive,
-
     createProduct
   )
   .get(getProducts);
