@@ -20,7 +20,7 @@ services:
           memory: 128M
       update_config:
         parallelism: 1
-        delay: 10s 
+        delay: 10s
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -53,6 +53,22 @@ services:
       # - ./certs:/etc/nginx/certs:ro
     depends_on:
       - e-commerce
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt:rw
+      - ./certbot/www:/var/www/certbot:rw
+    entrypoint: sh -c "trap exit TERM; while :; do certbot renew; sleep 12h; done"
+    command: >
+      sh -c "certbot certonly --webroot -w /var/www/certbot
+             -d abdelrahma.com
+             --email abdomohamed2200066@gmail.com
+             --agree-tos
+             --no-eff-email
+             && crond -f"
+    depends_on:
+      - nginx
 
 volumes:
   redis-data:
