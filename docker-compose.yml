@@ -5,26 +5,24 @@ services:
       target: ${NODE_ENV:-development}
     volumes:
       - ./src:/app/src:ro
-    # ports:
-    #   - "3000:3000"
     environment:
       - NODE_ENV=${NODE_ENV:-development}
     env_file:
       - ./.env
     deploy:
-      replicas: ${APP_REPLICAS:-1} # 👈 هنا Swarm هيشغل 6 نسخ تلقائي
+      replicas: ${APP_REPLICAS:-1}
       resources:
         limits:
-          cpus: "0.50" # كل replica تاخد نص CPU
-          memory: 256M # كل replica تاخد 256 ميجا RAM كحد أقصى
+          cpus: "0.50"
+          memory: 256M
         reservations:
-          cpus: "0.25" # يضمن ربع CPU متوفر دايمًا
-          memory: 128M # يضمن 128 ميجا RAM متوفرة
+          cpus: "0.25"
+          memory: 128M
       update_config:
-        parallelism: 1 # يحدث نسخة واحدة في كل مرة
-        delay: 10s # تأخير بين كل تحديث
+        parallelism: 1
+        delay: 10s 
       restart_policy:
-        condition: on-failure # يعيد التشغيل لو الخدمة وقعت
+        condition: on-failure
         delay: 5s
     command: >
       sh -c "
