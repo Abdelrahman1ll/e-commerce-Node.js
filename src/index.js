@@ -1,11 +1,12 @@
 // index.js
 const connectDB = require("./config/dbConn");
 const app = require("./app");
-
+const redisClient = require("./config/redis");
 async function startServer() {
   try {
     await connectDB();
-
+    await redisClient.connect();
+    
     const PORT = process.env.PORT || 8000;
 
     const server = app.listen(PORT, () => {

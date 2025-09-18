@@ -1,37 +1,36 @@
-// app.js
 require("dotenv").config();
 const express = require("express");
-const ApiError = require("./utils/ApiError");
+const path = require("path");
+require("colors");
+const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
-const path = require("path");
-const morgan = require("morgan");
-require("colors");
-const globalError = require("./middleware/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compression = require("compression");
+const mongoSanitize = require("express-mongo-sanitize");
+
+const ApiError = require("./utils/ApiError");
+const globalError = require("./middleware/errorMiddleware");
 const Routers = require("./routes/index");
 
 const app = express();
 
-app.use(express.json());
-app.use(compression()); // ضغط البيانات لتقليل حجم الاستجابة
+// ============================
+// Middleware
+// ============================
+
+// ضغط الاستجابة لتقليل حجم البيانات
+app.use(compression());
+
+// حماية الـ HTTP headers
+app.use(helmet());
+
+// السماح بالطلبات من أي مصدر (CORS)
 app.use(cors());
 app.options("*", cors());
-app.use(helmet()); // ده لي الحماية من المخاطر المحتملة
-app.use(cookieParser()); // مهم جدًا لجلب الـ Refresh Token من الكوكيز
-app.use(
-  cors({
-    origin: "*",
-  })
-);
 
-app.use(bodyParser.json()); // بيسمح للمتصفحات بالا��تجابة من الطلبات با��تخدام JSON
-app.use(express.urlencoded({ extended: true, limit: "10kb" })); // ده لي الحماية من المخاطر المحتملة
-app.use(express.static(path.join(__dirname, "uploads/Products"))); // ده لي الصور اللي فيها البيانات
-app.use(express.static(path.join(__dirname, "uploads/Maintenance"))); // ده لي الصور اللي فيها البيانات
-
+// Logging في وضع التطوير
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   console.log(`Mode: ${process.env.NODE_ENV}`.yellow);
@@ -39,29 +38,61 @@ if (process.env.NODE_ENV === "development") {
   console.log(`Mode: ${process.env.NODE_ENV || "production"}`.yellow);
 }
 
-app.get("/", (red, res, next) => {
+// Parsing للـ JSON والـ URL-encoded
+app.use(express.json({ limit: "10kb" }));
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+// قراءة الكوكيز
+app.use(cookieParser());
+
+// حماية من NoSQL Injection على body فقط
+app.use((req, res, next) => {
+  if (req.body) {
+    const sanitizedBody = mongoSanitize.sanitize(req.body); // بدون تعديل req.query أو req.params
+    req.body = sanitizedBody;
+  }
+  next();
+});
+
+
+// ملفات ثابتة (صور المنتجات والصيانة)
+// app.use(express.static(path.join(__dirname, "uploads/Products")));
+// app.use(express.static(path.join(__dirname, "uploads/Maintenance")));
+
+// ============================
+// Routes
+// ============================
+
+app.get("/", (req, res) => {
   res.status(200).json({
     message: "Welcome to the first API 🚀",
   });
 });
 
-// All the routers
+
+// ربط جميع الروترات
 Routers(app);
 
-// development
+// Swagger UI للـ documentation في وضع التطوير
 if (process.env.NODE_ENV === "development") {
   const swaggerUi = require("swagger-ui-express");
   const swaggerFile = require("./swagger/swagger.json");
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 }
 
-// Middleware لمعالجة الأخطاء والمسارات غير الموجودة
+// ============================
+// Handle unknown routes
+// ============================
 app.all("*", (req, res, next) => {
-  // 3) Use a generic api error
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });
 
-// Global error gandling middleware for express
+// ============================
+// Global error handler
+// ============================
 app.use(globalError);
 
+
+// تصدير التطبيق
 module.exports = app;
