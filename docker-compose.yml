@@ -43,7 +43,6 @@ services:
       - "6379:6379"
 
   nginx:
-    container_name: nginx-ecommerce
     image: nginx:stable-alpine
     ports:
       - "80:80"

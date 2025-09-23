@@ -16,7 +16,7 @@ This is the **backend** for an E-Commerce application built with:
 ```bash
 NODE_ENV=development APP_REPLICAS=1 docker-compose up --build
 
-📦back end
+📦e-commerce-Node.js
  ┣ 📂src
  ┃ ┣ 📂config
  ┃ ┣ 📂controllers
@@ -39,8 +39,10 @@ NODE_ENV=development APP_REPLICAS=1 docker-compose up --build
  ┣ 📜Dockerfile
  ┣ 📜index.html
  ┣ 📜index.js
+ ┣ 📜nginx.conf
  ┣ 📜package-lock.json
  ┣ 📜package.json
+ ┣ 📜prometheus.yml
  ┣ 📜README.md
  ┗ 📜vercel.json
 

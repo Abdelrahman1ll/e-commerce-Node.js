@@ -15,7 +15,11 @@ const globalError = require("./middleware/errorMiddleware");
 const Routers = require("./routes/index");
 
 // Prometheus client
-const client = require("prom-client");
+const {
+  register,
+  metricsMiddleware,
+  startMemoryWatcher,
+} = require("./utils/metrics");
 
 const app = express();
 
@@ -58,46 +62,12 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // ملفات ثابتة (صور المنتجات والصيانة)
 // app.use(express.static(path.join(__dirname, "uploads/Products")));
 // app.use(express.static(path.join(__dirname, "uploads/Maintenance")));
 
-
-// ============================
-// Prometheus Metrics
-// ============================
-
-// Register
-const register = new client.Registry();
-client.collectDefaultMetrics({ register }); // CPU, Memory, Event Loop
-
-// Counter لعدد الطلبات
-const httpRequestsTotal = new client.Counter({
-  name: "http_requests_total",
-  help: "Total number of HTTP requests",
-  labelNames: ["method", "route", "status"],
-});
-register.registerMetric(httpRequestsTotal);
-
-// Histogram لزمن الاستجابة
-const httpRequestDuration = new client.Histogram({
-  name: "http_request_duration_seconds",
-  help: "HTTP request latency in seconds",
-  labelNames: ["method", "route", "status"],
-  buckets: [0.1, 0.5, 1, 2, 5],
-});
-register.registerMetric(httpRequestDuration);
-
-// Middleware لقياس الطلبات
-app.use((req, res, next) => {
-  const end = httpRequestDuration.startTimer();
-  res.on("finish", () => {
-    httpRequestsTotal.inc({ method: req.method, route: req.originalUrl, status: res.statusCode });
-    end({ method: req.method, route: req.originalUrl, status: res.statusCode });
-  });
-  next();
-});
+// Prometheus middleware
+app.use(metricsMiddleware);
 
 // Endpoint لعرض الـ metrics
 app.get("/metrics", async (req, res) => {
@@ -105,6 +75,8 @@ app.get("/metrics", async (req, res) => {
   res.end(await register.metrics());
 });
 
+// Memory watcher
+startMemoryWatcher();
 
 // ============================
 // Routes
@@ -115,7 +87,6 @@ app.get("/", (req, res) => {
     message: "Welcome to the first API 🚀",
   });
 });
-
 
 // ربط جميع الروترات
 Routers(app);
@@ -138,7 +109,6 @@ app.all("*", (req, res, next) => {
 // Global error handler
 // ============================
 app.use(globalError);
-
 
 // تصدير التطبيق
 module.exports = app;
