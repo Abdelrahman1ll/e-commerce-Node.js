@@ -18,7 +18,7 @@ jobs:
 
       # 2. تنصيب Docker
       - name: Set up Docker
-        uses: docker/setup-compose-action@v1.2.0
+        uses: docker/setup-buildx-action@v3
 
       # 3. شغل الكونتينرات
       - name: Build and Run with Docker Compose
