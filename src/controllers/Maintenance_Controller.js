@@ -1,9 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
-const {
-  validateMaintenance,
-  Maintenance,
-} = require("../models/Maintenance_Model");
+const { Maintenance } = require("../models/Maintenance_Model");
+const validateMaintenance = require("../validations/Maintenance.validation");
 const nodemailer = require("nodemailer");
 const { User } = require("../models/User_Model");
 

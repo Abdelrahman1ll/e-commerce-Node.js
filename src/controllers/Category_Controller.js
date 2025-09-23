@@ -1,9 +1,9 @@
 const asyncHandler = require("express-async-handler");
+const { Category } = require("../models/Category_Model");
 const {
   ValidationCreateCategory,
   ValidationUpdateCategory,
-  Category,
-} = require("../models/Category_Model");
+} = require("../validations/Category.validation");
 const ApiError = require("../utils/ApiError");
 
 /**

@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../../../app");
+const app = require("../../app");
 const mongoose = require("mongoose");
 const { User } = require("../../models/User_Model");
 const connectTestDB = require("../utils/Setup_Test_DB");
@@ -12,7 +12,7 @@ beforeAll(async () => {
     name: "addresses",
     lastName: "addres",
     email: "addresses@gmil.com",
-    number: "01209876543",
+    phone: "01209876543",
     password: "admin1234",
     passwordConfirm: "admin1234",
     isVerified: true,

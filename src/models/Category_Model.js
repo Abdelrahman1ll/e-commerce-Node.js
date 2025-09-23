@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Joi = require("joi");
 
 const categorySchema = new mongoose.Schema(
   {
@@ -15,23 +14,6 @@ const categorySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-const ValidationCreateCategory = (odj) => {
-  const schema = Joi.object({
-    name: Joi.string().min(3).max(20).required(),
-  });
-  return schema.validate(odj);
-};
-
-const ValidationUpdateCategory = (odj) => {
-  const schema = Joi.object({
-    id: Joi.string()
-      .pattern(/^[0-9a-fA-F]{24}$/) // regex للـ ObjectId
-      .required(),
-    name: Joi.string().min(3).max(20),
-  });
-  return schema.validate(odj);
-};
 
 const slugify = require("slugify");
 
@@ -57,6 +39,4 @@ const Category = mongoose.model("Category", categorySchema);
 
 module.exports = {
   Category,
-  ValidationCreateCategory,
-  ValidationUpdateCategory,
 };

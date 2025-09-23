@@ -1,8 +1,8 @@
+const { User } = require("../models/User_Model");
 const {
   validateAddress,
   validateUpdateAddress,
-  User,
-} = require("../models/User_Model");
+} = require("../validations/User.validation");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
 

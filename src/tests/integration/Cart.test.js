@@ -1,6 +1,6 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const app = require("../../../app"); // لازم تعمل export للـ app
+const app = require("../../app"); // لازم تعمل export للـ app
 const { Cart } = require("../../models/Cart_Model");
 const { Product } = require("../../models/Product_Model");
 const { Category } = require("../../models/Category_Model");

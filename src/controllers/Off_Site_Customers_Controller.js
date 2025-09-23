@@ -1,10 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
+const { Customer } = require("../models/Off_Site_Customers_Model");
 const {
   validateCustomer,
   UpdateCustomer,
-  Customer,
-} = require("../models/Off_Site_Customers_Model");
+} = require("../validations/Off_Site_Customers.validation");
 /**
  * @desc   Get All Customers Who Are Not On The Site
  * @route   /api/customers
@@ -38,7 +38,7 @@ const createCustomer = asyncHandler(async (req, res, next) => {
   }
   const customer = await Customer.create({ name, phoneNumber, data });
   res.status(201).send({
-    data: customer ,
+    data: customer,
     status: "success",
   });
 });

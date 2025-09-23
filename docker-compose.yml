@@ -1,5 +1,6 @@
 services:
   e-commerce:
+    container_name: e-commerce-container
     build:
       context: .
       target: ${NODE_ENV:-development}

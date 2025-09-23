@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
  **/
 const UpdateUser = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
-  const { name, lastName, email, number } = req.body;
+  const { name, lastName, email, phone } = req.body;
   const userId = req.user._id;
   const userExists = await User.findById(id);
   if (!userExists) {
@@ -26,7 +26,7 @@ const UpdateUser = asyncHandler(async (req, res, next) => {
     name,
     lastName,
     email,
-    number,
+    phone,
   });
   if (error) return res.status(400).json({ error: error.details[0].message });
 
@@ -36,7 +36,7 @@ const UpdateUser = asyncHandler(async (req, res, next) => {
       name,
       lastName,
       email,
-      number,
+      phone,
     },
 
     { new: true, runValidators: true }

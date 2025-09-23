@@ -1,9 +1,9 @@
 const asyncHandler = require("express-async-handler");
+const { Product } = require("../models/Product_Model");
 const {
   ValidationCreateProduct,
   ValidationUpdateProduct,
-  Product,
-} = require("../models/Product_Model");
+} = require("../validations/Product.validation");
 const ApiError = require("../utils/ApiError");
 const ApiFeatures = require("../utils/ApiFeatures");
 const { Category } = require("../models/Category_Model");
@@ -23,12 +23,11 @@ const redisClient = require("../config/redis");
 // /api/products?title=abdo
 
 const getProducts = asyncHandler(async (req, res, next) => {
+  const cacheKey = `products:${JSON.stringify(req.query)}`;
 
-const cacheKey = `products:${JSON.stringify(req.query)}`;
+  const cachedData = await redisClient.get(cacheKey);
 
-const cachedData = await redisClient.get(cacheKey);
-
-if (cachedData) {
+  if (cachedData) {
     return res.status(200).send({
       amount: JSON.parse(cachedData).length,
       data: { products: JSON.parse(cachedData) },
@@ -40,7 +39,9 @@ if (cachedData) {
   const features = new ApiFeatures(Product.find(), req.query).filter().sort();
   const products = await features.query;
 
-  await redisClient.set(cacheKey, JSON.stringify(products));
+  if (req.query) {
+    await redisClient.set(cacheKey, JSON.stringify(products));
+  }
 
   res.status(200).send({
     amount: products.length,
@@ -60,7 +61,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const data = await Product.findById(id);
   if (!data) {
-   return next(new ApiError("Product not found", 404));
+    return next(new ApiError("Product not found", 404));
   }
   res.status(200).send({
     data,
@@ -77,20 +78,20 @@ const getProductById = asyncHandler(async (req, res, next) => {
 const createProduct = asyncHandler(async (req, res, next) => {
   let { images, ...productData } = req.body;
   if (!images || images.length === 0) {
-   return next(new ApiError("Please upload at least one image", 400));
+    return next(new ApiError("Please upload at least one image", 400));
     // images = ["img.jpeg", "img2.jpeg"];
   }
 
-  const { error } = ValidationCreateProduct({images, ...productData});
+  const { error } = ValidationCreateProduct({ images, ...productData });
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   const cat = await Category.findById(req.body.category);
   if (!cat) {
-   return next(new ApiError("Category not found", 404));
+    return next(new ApiError("Category not found", 404));
   }
   const brandId = await Brand.findById(req.body.brand);
   if (!brandId) {
-   return next(new ApiError("Brand not found", 404));
+    return next(new ApiError("Brand not found", 404));
   }
 
   const product = await Product.create({
@@ -124,27 +125,27 @@ const updateProduct = asyncHandler(async (req, res, next) => {
   const { error } = ValidationUpdateProduct({
     ...productData,
     images,
-    id: req.params.id
+    id: req.params.id,
   });
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   const ProductExists = await Product.findById(productId);
   if (!ProductExists) {
-   return next(new ApiError("Product not found", 404));
+    return next(new ApiError("Product not found", 404));
   }
 
   let cat;
   if (req.body.category) {
     cat = await Category.findById(req.body.category);
     if (!cat) {
-     return next(new ApiError("Category not found", 404));
+      return next(new ApiError("Category not found", 404));
     }
   }
   let brandId;
   if (req.body.brand) {
     brandId = await Brand.findById(req.body.brand);
     if (!brandId) {
-     return next(new ApiError("Brand not found", 404));
+      return next(new ApiError("Brand not found", 404));
     }
   }
 

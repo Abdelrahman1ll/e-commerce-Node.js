@@ -109,12 +109,13 @@ NODE_ENV=production APP_REPLICAS=6 docker-compose down          # Stop and remov
 NODE_ENV=production APP_REPLICAS=6 docker-compose down -v      # Stop and remove networks + volumes in production mode
 
 # ===========================
-# Run swagger script inside a specific container (here container name is node-app)
-NODE_ENV=production APP_REPLICAS=6 docker exec -it node-app npm run swagger  # Run swagger inside container
+# Run swagger script inside a specific container (here container name is e-commerce)
+docker exec -it e-commerce-container npm run swagger  # Run swagger inside container
 
 # ===========================
 # Run project tests inside a specific container
-NODE_ENV=production APP_REPLICAS=6 docker exec -it node-app npm run test     # Run tests inside container
+docker exec -it e-commerce-container npm run test
+    # Run tests inside container
 
 # First API from here
 http://localhost/

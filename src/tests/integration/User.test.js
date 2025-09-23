@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../../../app");
+const app = require("../../app");
 const mongoose = require("mongoose");
 const { User } = require("../../models/User_Model");
 const connectTestDB = require("../utils/Setup_Test_DB");
@@ -20,7 +20,7 @@ beforeAll(async () => {
     name: "Password User",
     lastName: "Password User",
     email: "password@example.com",
-    number: "01091066789",
+    phone: "01091066789",
     password: "OldPass123",
     isVerified: true,
   });
@@ -64,7 +64,7 @@ describe("Update /api/users API", () => {
       lastName: "test",
       email: "aaaaaaaaa1@gmail.com",
       password: "admin1234",
-      number: "01098766789",
+      phone: "01098766789",
       isVerified: true,
     });
     const reslogin = await request(app).post("/api/auth/login").send({
@@ -89,7 +89,7 @@ describe("Update /api/users API", () => {
       lastName: "test",
       email: "aaaaaaaaa2@gmail.com",
       password: "admin1234",
-      number: "01098744789",
+      phone: "01098744789",
       isVerified: true,
     });
     const reslogin = await request(app).post("/api/auth/login").send({
@@ -113,7 +113,7 @@ describe("Update /api/users API", () => {
       lastName: "test",
       email: "aaaaaaaaa3@gmail.com",
       password: "admin1234",
-      number: "01098744789",
+      phone: "01098744789",
       isVerified: true,
     });
     const reslogin = await request(app).post("/api/auth/login").send({
@@ -151,7 +151,7 @@ describe("Update /api/users API", () => {
       lastName: "test",
       email: "aaaaaaaaa5@gmail.com",
       password: "admin1234",
-      number: "01098744789",
+      phone: "01098744789",
       role: "admin",
       isVerified: true,
     });
@@ -180,7 +180,7 @@ describe("Delete /api/users API", () => {
       lastName: "test",
       email: "aaaaaaaaa6@gmail.com",
       password: "admin1234",
-      number: "01098744789",
+      phone: "01098744789",
       isVerified: true,
     });
     const reslogin = await request(app).post("/api/auth/login").send({
@@ -200,7 +200,7 @@ describe("Delete /api/users API", () => {
       lastName: "test",
       email: "aaaaaaaaa7@gmail.com",
       password: "admin1234",
-      number: "01098744789",
+      phone: "01098744789",
       isVerified: true,
     });
     const reslogin = await request(app).post("/api/auth/login").send({
@@ -223,7 +223,7 @@ describe("Delete /api/users API", () => {
       lastName: "test",
       email: "aaaaaaaaa8@gmail.com",
       password: "admin1234",
-      number: "01098744789",
+      phone: "01098744789",
       isVerified: true,
     });
     const reslogin = await request(app).post("/api/auth/login").send({
@@ -285,7 +285,7 @@ describe("Update Pessword /api/users/forgot-password/:id API", () => {
       lastName: "test",
       email: "aaaaaaaaa11@gmail.com",
       password: "admin1234",
-      number: "01098744789",
+      phone: "01098744789",
       isVerified: true,
     });
     const reslogin = await request(app).post("/api/auth/login").send({
@@ -307,14 +307,14 @@ describe("Update Pessword /api/users/forgot-password/:id API", () => {
     expect(res.body.message).toBe("Password cannot be changed");
   });
 
-  it("The password must contain at least 6 characters, a letter, and a number.", async () => {
+  it("The password must contain at least 6 characters, a letter, and a phone.", async () => {
     const res = await request(app)
       .put(`/api/users/forgot-password/${ResLoginPassword?.body.data._id}`)
       .set("Authorization", `Bearer ${ResLoginPassword?.body.accessToken}`)
       .send({ passwordCurrent: "OldPass123", passwordNew: "abdo" });
     expect(res.status).toBe(400);
     expect(res.body.message).toBe(
-      "The password must contain at least 6 characters, a letter, and a number."
+      "The password must contain at least 6 characters, a letter, and a phone."
     );
   });
 

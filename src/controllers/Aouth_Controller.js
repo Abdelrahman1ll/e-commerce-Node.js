@@ -1,8 +1,10 @@
 const {
-  ValidationSignup,
-  ValidationLogin,
   User,
 } = require("../models/User_Model");
+const {
+  ValidationSignup,
+  ValidationLogin,
+} = require("../validations/User.validation");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
@@ -114,22 +116,21 @@ const signupGoogle = asyncHandler(async (req, res, next) => {
  **/
 
 const signup = asyncHandler(async (req, res, next) => {
-  const { name, lastName, email, number, password, passwordConfirm } = req.body;
-
+  const { name, lastName, email, phone, password } = req.body;
   const { error } = ValidationSignup(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   let existingUser = await User.findOne({ email });
-  let existingUserNumber = await User.findOne({ number });
-  if (existingUser || existingUserNumber) {
-    return next(new ApiError("Email or phone number is already in use", 400));
+  let existingUserphone = await User.findOne({ phone });
+  if (existingUser || existingUserphone) {
+    return next(new ApiError("Email or phone phone is already in use", 400));
   }
 
   const user = await User.create({
     name,
     lastName,
     email,
-    number,
+    phone,
     password,
   });
   try {
