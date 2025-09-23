@@ -280,7 +280,7 @@ describe("GET /api/auth/verify:token API", () => {
       password: "admin1234",
       passwordConfirm: "admin1234",
     });
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_EMAIL, {
       expiresIn: "1h",
     });
     const res = await request(app).get(`/api/auth/verify/${token}`);
@@ -304,7 +304,7 @@ describe("GET /api/auth/verify:token API", () => {
       password: "admin1234",
       passwordConfirm: "admin1234",
     });
-    const token = jwt.sign({ id: "" }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: "" }, process.env.JWT_SECRET_EMAIL, {
       expiresIn: "1h",
     });
     const res = await request(app).get(`/api/auth/verify/${token}`);
@@ -321,7 +321,7 @@ describe("GET /api/auth/verify:token API", () => {
       password: "admin1234",
       passwordConfirm: "admin1234",
     });
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_EMAIL, {
       expiresIn: "1h",
     });
     await User.findByIdAndDelete(user._id);

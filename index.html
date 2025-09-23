@@ -1,51 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Login Demo</title>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-</head>
-<body>
-  <h2>Login with Google</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Login Demo</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <h2>Login with Google</h2>
 
-  <!-- الزر بتاع تسجيل الدخول -->
-  <div id="g_id_signin"></div>
+    <!-- الزر بتاع تسجيل الدخول -->
+    <div id="g_id_signin"></div>
 
-  <script>
-    // لما الصفحة تفتح
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id: "654665381478-j8rljheephia9u4h9tm30s50clmuneom.apps.googleusercontent.com", // <-- حط Client ID بتاعك
-        callback: handleCredentialResponse,
-      });
+    <script>
+      // لما الصفحة تفتح
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id:
+            "654665381478-j8rljheephia9u4h9tm30s50clmuneom.apps.googleusercontent.com", // <-- حط Client ID بتاعك
+          callback: handleCredentialResponse,
+        });
 
-      google.accounts.id.renderButton(
-        document.getElementById("g_id_signin"), // الزر
-        { theme: "outline", size: "large" } // استايل الزر
-      );
+        google.accounts.id.renderButton(
+          document.getElementById("g_id_signin"), // الزر
+          { theme: "outline", size: "large" } // استايل الزر
+        );
 
-      google.accounts.id.prompt(); // يظهر البوب أب بتاع جوجل
-    };
+        google.accounts.id.prompt(); // يظهر البوب أب بتاع جوجل
+      };
 
-    // هنا بيجيلك الـ id_token
-    function handleCredentialResponse(response) {
-      const id_token = response.credential;
-      console.log("ID Token:", id_token);
+      // هنا بيجيلك الـ id_token
+      function handleCredentialResponse(response) {
+        const id_token = response.credential;
+        console.log("ID Token:", id_token);
 
-      // لو عايز تفك تشفير التوكن وتشوف بيانات المستخدم:
-      const base64Url = id_token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const userInfo = JSON.parse(window.atob(base64));
-      console.log("User Info:", userInfo);
+        // لو عايز تفك تشفير التوكن وتشوف بيانات المستخدم:
+        const base64Url = id_token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const userInfo = JSON.parse(window.atob(base64));
+        console.log("User Info:", userInfo);
 
-      // ابعت التوكن للسيرفر
-      // fetch("http://localhost:5000/api/auth/google", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ token: id_token }),
-      // });
-    }
-  </script>
-</body>
+        // ابعت التوكن للسيرفر
+        // fetch("http://localhost:5000/api/auth/google", {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify({ token: id_token }),
+        // });
+      }
+    </script>
+  </body>
 </html>

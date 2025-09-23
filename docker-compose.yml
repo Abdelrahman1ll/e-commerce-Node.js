@@ -1,17 +1,16 @@
 services:
   e-commerce:
-    container_name: e-commerce-container
     build:
       context: .
-      target: ${NODE_ENV:-development}
+      target: ${NODE_ENV:-production}
     volumes:
       - ./src:/app/src:ro
     environment:
-      - NODE_ENV=${NODE_ENV:-development}
+      - NODE_ENV=${NODE_ENV:-production}
     env_file:
       - ./.env
     deploy:
-      replicas: ${APP_REPLICAS:-1}
+      replicas: ${APP_REPLICAS:-5}
       resources:
         limits:
           cpus: "0.50"
@@ -35,6 +34,20 @@ services:
       "
     depends_on:
       - redis
+      - mongo
+
+  mongo:
+    container_name: e-commerce-mongo
+    image: mongo
+    volumes:
+      - mongo-db:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    command:
+      ["mongod", "--quiet", "--bind_ip_all", "--logpath", "/data/db/mongod.log"]
 
   redis:
     image: redis:alpine
@@ -85,7 +98,7 @@ services:
       - "3001:3000"
     depends_on:
       - prometheus
-# 1234
 
 volumes:
+  mongo-db:
   redis-data:

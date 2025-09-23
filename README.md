@@ -14,7 +14,7 @@ This is the **backend** for an E-Commerce application built with:
 
 ### 1️⃣ Start the containers
 ```bash
-NODE_ENV=development APP_REPLICAS=1 docker-compose up --build
+docker-compose up --build
 
 📦e-commerce-Node.js
  ┣ 📂src
@@ -46,76 +46,81 @@ NODE_ENV=development APP_REPLICAS=1 docker-compose up --build
  ┣ 📜README.md
  ┗ 📜vercel.json
 
-
+# =======================
 MONGODB_URI=
-REDIS_URL=
-PORT=
-NODE_ENV=
 
+MONGODB_URI_TEST=
+
+REDIS_URL=
+# =======================
+PORT=3000
+# =======================
+NODE_ENV="production" 
+# production
+# development
+# =======================
+APP_REPLICAS=5
+# =======================
+BASE_URL=http://127.0.0.1:3000
+# =======================
 JWT_SECRET_REFRESH=
-JWT_EXPIRES_IN_REFRESH=
 
 JWT_SECRET_ACCESS=
+
+JWT_EXPIRES_IN_REFRESH=
+
 JWT_EXPIRES_IN_ACCESS=
-
-JWT_SECRET=
-
+# =======================
 EMAIL_USER=
+
 EMAIL_PASS=
-
+# =======================
+JWT_SECRET_EMAIL=
+# =======================
 GOOGLE_CLIENT_ID=
-
+# =======================
 FOLDER_ID=
+# =======================
 
-# ===========================
-# Build and run containers (important the first time or after modifying the Dockerfile)
-# - NODE_ENV=development => run in development mode
-# - NODE_ENV=production  => run in production mode
-# - APP_REPLICAS=6 => number Containers
-# This command builds a new image for each container and starts them immediately
 
-  # Run containers in development mode with a new build
-NODE_ENV=development APP_REPLICAS=1 docker-compose up --build
-
-  # Run containers in production mode with a new build
-NODE_ENV=production APP_REPLICAS=6 docker-compose up --build
+# Run containers in development mode with a new build
+docker-compose up --build
 
 # ===========================
 # Start previously stopped containers (without building or pulling new images)
-NODE_ENV=production APP_REPLICAS=6 docker-compose start         # Start containers in production mode
+docker-compose start
 
 # ===========================
 # Restart all containers (stop then start)
-NODE_ENV=production APP_REPLICAS=6 docker-compose restart       # Restart all containers in production mode
+docker-compose restart
 
 # ===========================
 # Stop containers only (containers remain on the system for later start)
-NODE_ENV=production APP_REPLICAS=6 docker-compose stop          # Stop containers in production mode
+docker-compose stop
 
 # ===========================
 # Start containers and show logs in terminal (like `npm run dev`)
-NODE_ENV=production APP_REPLICAS=6 docker-compose up            # Run containers in production mode with logs
+docker-compose up
 
 # ===========================
 # Start containers in the background (without logs)
-NODE_ENV=production APP_REPLICAS=6 docker-compose up -d         # Run containers in detached mode (background)
+docker-compose up -d
 
 # ===========================
 # Stop all containers and remove networks (images and volumes remain)
-NODE_ENV=production APP_REPLICAS=6 docker-compose down          # Stop and remove networks in production mode
+docker-compose down
 
 # ===========================
 # Stop all containers, remove networks and volumes (delete stored data)
-NODE_ENV=production APP_REPLICAS=6 docker-compose down -v      # Stop and remove networks + volumes in production mode
+docker-compose down -v
 
 # ===========================
-# Run swagger script inside a specific container (here container name is e-commerce)
-docker exec -it e-commerce-container npm run swagger  # Run swagger inside container
+# Run swagger script inside a specific container (replace <container_id> with real container name/id)
+docker exec -it <container_id> npm run swagger
 
 # ===========================
-# Run project tests inside a specific container
-docker exec -it e-commerce-container npm run test
-    # Run tests inside container
+# Run project tests inside a specific container (replace <container_id> with real container name/id)
+docker exec -it <container_id> npm run test
 
 # First API from here
-http://localhost/
+http://localhost

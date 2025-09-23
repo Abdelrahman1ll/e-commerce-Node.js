@@ -14,7 +14,7 @@ const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const sendVerificationEmail = async (id, email) => {
-  const token = jwt.sign({ id: id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: id }, process.env.JWT_SECRET_EMAIL, {
     expiresIn: "1h",
   });
 
@@ -263,7 +263,7 @@ const resendVerification = asyncHandler(async (req, res, next) => {
 const verify = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET_EMAIL);
   if (!decoded || !decoded.id) {
     return next(new ApiError("Invalid token", 400));
   }
