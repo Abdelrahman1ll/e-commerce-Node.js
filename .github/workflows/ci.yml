@@ -20,6 +20,10 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
 
+      # 3. تنصيب Docker Compose
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v2
+
       # 3. شغل الكونتينرات
       - name: Build and Run with Docker Compose
         run: |
