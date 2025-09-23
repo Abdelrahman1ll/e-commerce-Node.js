@@ -1,3 +1,39 @@
+# name: CI with Docker
+
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["main"]
+
+# jobs:
+#   e-commerce:
+#     # 0. النظام المطلوب
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # 1. نسخ الكود
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#         # 2. تأكد من Docker
+#       - name: Set up Docker
+#         uses: docker/setup-buildx-action@v3
+
+#       # 3. شغل الكونتينرات
+#       - name: Build and Run with Docker Compose
+#         run: |
+#           NODE_ENV=development APP_REPLICAS=1 docker-compose up --build -d
+
+#       # 4. شغل الاختبارات داخل الكونتينر
+#       - name: Run tests
+#         run: docker exec -it e-commerce-container npm run test
+
+#       # 5. إيقاف وتنظيف الكونتينرات
+#       - name: Stop services
+#         run: docker compose down -v
+
+
 name: CI with Docker
 
 on:
@@ -8,7 +44,7 @@ on:
 
 jobs:
   e-commerce:
-    # 0. النظام المطلوب
+    # النظام المطلوب
     runs-on: ubuntu-latest
 
     steps:
@@ -16,23 +52,38 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. تنصيب Docker
-      - name: Set up Docker
+      # 2. تأكد من Docker
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      # 3. تنصيب Docker Compose
-      - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v2
 
       # 3. شغل الكونتينرات
       - name: Build and Run with Docker Compose
         run: |
-          NODE_ENV=development APP_REPLICAS=1 docker-compose up --build -d
+          NODE_ENV=development APP_REPLICAS=1 docker compose up --build -d
 
-      # 4. شغل الاختبارات داخل الكونتينر
+      # 4. انتظار حتى تكون الخدمات جاهزة
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for services to start..."
+          sleep 30
+          docker compose ps
+
+      # 5. شغل الاختبارات داخل الكونتينر
       - name: Run tests
-        run: docker exec -it e-commerce-container npm run test
+        run: |
+          # استخدم اسم الخدمة من docker-compose.yml بدلاً من اسم الكونتينر
+          docker compose exec -T app npm run test
 
-      # 5. إيقاف وتنظيف الكونتينرات
-      - name: Stop services
-        run: docker compose down -v
+      # 6. عرض سجلات الأخطاء في حالة الفشل
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          echo "=== Container logs ==="
+          docker compose logs
+
+      # 7. إيقاف وتنظيف الكونتينرات
+      - name: Stop and cleanup services
+        if: always()
+        run: |
+          docker compose down -v
+          docker system prune -f
