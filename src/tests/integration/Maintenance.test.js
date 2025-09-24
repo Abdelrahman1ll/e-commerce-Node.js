@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const app = require("../../app");
 const { User } = require("../../models/User_Model");
 const { Maintenance } = require("../../models/Maintenance_Model");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const {
   createAndLoginUser,
   createAndLoginAdmin,

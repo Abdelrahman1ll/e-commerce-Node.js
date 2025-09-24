@@ -22,7 +22,6 @@ const {
 } = require("./utils/metrics");
 
 const app = express();
-
 // ============================
 // Middleware
 // ============================
@@ -63,7 +62,7 @@ app.use((req, res, next) => {
 });
 
 // ملفات ثابتة (صور المنتجات والصيانة)
-// app.use(express.static(path.join(__dirname, "uploads/Products")));
+app.use(express.static(path.join(__dirname, "../Uploads/Products")));
 // app.use(express.static(path.join(__dirname, "uploads/Maintenance")));
 
 // Prometheus middleware

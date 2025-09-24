@@ -77,11 +77,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
  **/
 const createProduct = asyncHandler(async (req, res, next) => {
   let { images, ...productData } = req.body;
-  if (!images || images.length === 0) {
-    return next(new ApiError("Please upload at least one image", 400));
-    // images = ["img.jpeg", "img2.jpeg"];
-  }
-
+  
   const { error } = ValidationCreateProduct({ images, ...productData });
   if (error) return res.status(400).json({ error: error.details[0].message });
 
@@ -119,7 +115,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
  * @access  Private
  **/
 const updateProduct = asyncHandler(async (req, res, next) => {
-  const { images, ...productData } = req.body;
+  const { images , ...productData } = req.body;
   const productId = req.params.id;
 
   const { error } = ValidationUpdateProduct({

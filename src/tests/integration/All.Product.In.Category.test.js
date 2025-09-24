@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 const mongoose = require("mongoose");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const { Brand } = require("../../models/Brand_Model");
 const { Product } = require("../../models/Product_Model");
 const { Category } = require("../../models/Category_Model");

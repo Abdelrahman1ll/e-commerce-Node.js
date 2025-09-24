@@ -5,7 +5,7 @@ const { Cart } = require("../../models/Cart_Model");
 const { Product } = require("../../models/Product_Model");
 const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const { createAndLoginUser } = require("../utils/Auth_Helper");
 const { User } = require("../../models/User_Model");
 

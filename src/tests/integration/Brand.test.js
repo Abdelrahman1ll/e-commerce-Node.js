@@ -4,7 +4,7 @@ const insertBrand = require("../fixtures/Brand_Fixture");
 const mongoose = require("mongoose");
 const { Brand } = require("../../models/Brand_Model");
 const { User } = require("../../models/User_Model");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const {
   createAndLoginAdmin,
   createAndLoginUser,

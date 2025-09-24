@@ -32,7 +32,7 @@ const ValidationUpdateProduct = (odj) => {
     PriceBeforeDiscount: Joi.number(),
     quantity: Joi.number(),
     // إذا كنت تستخدم Joi
-    dleteImg: Joi.alternatives().try(
+    dleteImages: Joi.alternatives().try(
       Joi.array().items(Joi.string()),
       Joi.string() // عشان لو جاية واحدة فقط
     ),

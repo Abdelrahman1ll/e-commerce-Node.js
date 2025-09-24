@@ -1,4 +1,5 @@
-const { ValidationUpdate, User } = require("../models/User_Model");
+const { User } = require("../models/User_Model");
+const { ValidationUpdate } = require("../validations/User.validation");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
@@ -113,7 +114,7 @@ const changePassword = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Password cannot be changed", 400));
   }
 
-   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
   if (!passwordRegex.test(passwordNew)) {
     return next(
       new ApiError(
@@ -123,13 +124,11 @@ const changePassword = asyncHandler(async (req, res, next) => {
     );
   }
 
-
   const isMatch = await bcrypt.compare(passwordCurrent, user.password);
   if (!isMatch) {
     return next(new ApiError("The old password is incorrect", 400));
   }
 
- 
   await User.findByIdAndUpdate(
     id,
     {

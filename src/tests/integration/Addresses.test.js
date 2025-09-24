@@ -2,7 +2,7 @@ const request = require("supertest");
 const app = require("../../app");
 const mongoose = require("mongoose");
 const { User } = require("../../models/User_Model");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 
 let TokenUser;
 beforeAll(async () => {

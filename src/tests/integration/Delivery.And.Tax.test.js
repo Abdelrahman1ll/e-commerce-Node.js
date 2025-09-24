@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 const mongoose = require("mongoose");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const { DeliveryTax } = require("../../models/Delivery_And_Tax_Model");
 const { User } = require("../../models/User_Model");
 const { createAndLoginAdmin } = require("../utils/Auth_Helper");

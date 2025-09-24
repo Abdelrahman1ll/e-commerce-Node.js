@@ -46,7 +46,6 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  dleteImg: [String],
   averageRating: {
     type: Number,
     set: (val) => Math.round(val * 10) / 10, // 3.6666 * 10 = 36.666  = 37 = 3.7

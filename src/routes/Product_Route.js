@@ -6,11 +6,7 @@ const {
   createProduct,
   updateProduct,
 } = require("../controllers/Product_Controller");
-const {
-  uploadProductImages,
-  resizeProductImages,
-  uploadImagesToDrive,
-} = require("../controllers/Upload_Google");
+const uploadImagesProduct = require("../controllers/uploads");
 const { verifyToken, authorize } = require("../middleware/verifyToken");
 
 router
@@ -18,9 +14,7 @@ router
   .post(
     verifyToken,
     authorize("admin"),
-    uploadProductImages,
-    resizeProductImages,
-    uploadImagesToDrive,
+    // uploadImagesProduct,
     createProduct
   )
   .get(getProducts);
@@ -30,9 +24,7 @@ router
   .put(
     verifyToken,
     authorize("admin"),
-    uploadProductImages,
-    resizeProductImages,
-    uploadImagesToDrive,
+    // uploadImagesProduct,
     updateProduct
   )
   .get(getProductById);

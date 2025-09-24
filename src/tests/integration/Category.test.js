@@ -4,7 +4,7 @@ const insertCategory = require("../fixtures/Category_Fixture");
 const mongoose = require("mongoose");
 const { Category } = require("../../models/Category_Model");
 const { User } = require("../../models/User_Model");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const {
   createAndLoginAdmin,
   createAndLoginUser,

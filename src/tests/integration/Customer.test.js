@@ -2,7 +2,7 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../../app"); // لازم يكون عندك export للـ app
 const { Customer } = require("../../models/Off_Site_Customers_Model");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const {
   createAndLoginAdmin,
   createAndLoginUser,

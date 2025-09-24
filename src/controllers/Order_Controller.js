@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
 const nodemailer = require("nodemailer");
-const { default: mongoose } = require("mongoose");
-const {Order} = require("../models/Order_Model");
+const { mongoose } = require("mongoose");
+const { Order } = require("../models/Order_Model");
 const { Cart } = require("../models/Cart_Model");
 const { User } = require("../models/User_Model");
 const { Product } = require("../models/Product_Model");
@@ -20,7 +20,6 @@ const getAllOrders = asyncHandler(async (req, res, next) => {
     status: "success",
   });
 });
-
 
 /**
  * @desc    Create a new order
@@ -44,8 +43,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
 
   for (const item of cart.products) {
     // التعديل هنا من cartItems إلى products
-    const product = await Product.findById(item.product._id);
-
+    const product = await Product.findById(item?.product?._id);
     if (!product) {
       return next(new ApiError("Product not found", 404));
     }
@@ -57,11 +55,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
     }
   }
 
-  // ✅ البحث عن آخر رقم طلب
-  const lastOrder = await Order.find().sort({ orderNumber: -1 });;
-  const newOrderNumber = lastOrder?.orderNumber
-    ? lastOrder.orderNumber + 1
-    : 1001;
+  const newOrderNumber = Math.floor(100000 + Math.random() * 900000);
 
   // ✅ إنشاء الطلب
   const order = await Order.create({
@@ -75,22 +69,16 @@ const createOrder = asyncHandler(async (req, res, next) => {
     totalPrice: cart.totalPrice || 0,
   });
   // تحديث المخزون باستخدام الجلسة
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
     for (const item of cart.products) {
       await Product.findByIdAndUpdate(
-        item.product._id,
+        item.product?._id,
         { $inc: { quantity: -item.count } },
-        { session }
+        { new: true }
       );
     }
-    await session.commitTransaction();
   } catch (error) {
-    await session.abortTransaction();
-    return next(new ApiError("Failed to update product quantity", 500));
-  } finally {
-    session.endSession();
+    return next(new ApiError(error.message, 400));
   }
 
   // ✅ حذف السلة
@@ -245,7 +233,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
  */
 const getAllOrdersByUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  
+
   const orders = await Order.find({ user: userId }).sort({ createdAt: -1 });
   res.status(200).send({
     amount: orders.length,

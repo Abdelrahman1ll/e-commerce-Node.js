@@ -13,6 +13,6 @@ const DeliveryTaxSchema = mongoose.Schema({
 });
 
 
-const DeliveryTax = mongoose.model("Settings", DeliveryTaxSchema);
+const DeliveryTax = mongoose.model("DeliveryTax", DeliveryTaxSchema);
 
 module.exports = { DeliveryTax };

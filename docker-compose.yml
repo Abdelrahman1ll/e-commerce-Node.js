@@ -5,6 +5,7 @@ services:
       target: ${NODE_ENV:-production}
     volumes:
       - ./src:/app/src:ro
+      - ./Uploads/Products:/app/Uploads/Products
     environment:
       - NODE_ENV=${NODE_ENV:-production}
     env_file:
@@ -38,7 +39,7 @@ services:
 
   mongo:
     container_name: e-commerce-mongo
-    image: mongo
+    image: mongo:latest
     volumes:
       - mongo-db:/data/db
     ports:
@@ -49,15 +50,38 @@ services:
     command:
       ["mongod", "--quiet", "--bind_ip_all", "--logpath", "/data/db/mongod.log"]
 
+  mongo-express:
+    image: mongo-express:latest
+    volumes:
+      - mongo-express-data:/var/lib/mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: 1234
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongo
+    depends_on:
+      - mongo
+    command: >
+      sh -c "
+      if [ \"${NODE_ENV}\" = 'production' ]; then
+        echo 'mongo-express disabled in production' && tail -f /dev/null;
+      else
+        tini -- /docker-entrypoint.sh mongo-express;
+      fi
+      "
+
   redis:
-    image: redis:alpine
+    image: redis:latest
     volumes:
       - redis-data:/data
     ports:
       - "6379:6379"
 
   nginx:
-    image: nginx:stable-alpine
+    image: nginx:latest
     ports:
       - "80:80"
       - "443:443"
@@ -68,7 +92,7 @@ services:
       - e-commerce
 
   certbot:
-    image: certbot/certbot
+    image: certbot/certbot:latest
     volumes:
       - ./certbot/conf:/etc/letsencrypt:rw
       - ./certbot/www:/var/www/certbot:rw
@@ -101,4 +125,5 @@ services:
 
 volumes:
   mongo-db:
+  mongo-express-data:
   redis-data:

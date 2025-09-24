@@ -6,7 +6,7 @@ const { Product } = require("../../models/Product_Model");
 const { Brand } = require("../../models/Brand_Model");
 const { Category } = require("../../models/Category_Model");
 const { User } = require("../../models/User_Model");
-const connectTestDB = require("../utils/Setup_Test_DB");
+const connectTestDB = require("../utils/db_Test");
 const {
   createAndLoginAdmin,
   createAndLoginUser,

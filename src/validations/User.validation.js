@@ -16,7 +16,7 @@ const ValidationSignup = (odj) => {
     passwordConfirm: Joi.string().valid(Joi.ref("password")).required(),
     role: Joi.string().valid("user", "admin").default("user"),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 
 const ValidationLogin = (odj) => {
@@ -24,7 +24,7 @@ const ValidationLogin = (odj) => {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(30).required(),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 const ValidationUpdate = (odj) => {
   const schema = Joi.object({
@@ -36,14 +36,14 @@ const ValidationUpdate = (odj) => {
     email: Joi.string().email(),
     phone: Joi.string().pattern(/^01[0-25]\d{8}$/),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 
 const validateEmail = (odj) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 
 const validateResetCode = (odj) => {
@@ -51,7 +51,7 @@ const validateResetCode = (odj) => {
     resetCode: Joi.number().required(),
     email: Joi.string().email().required(),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 
 const validatePassword = (odj) => {
@@ -60,7 +60,7 @@ const validatePassword = (odj) => {
     password: Joi.string().min(6).max(30).required(),
     passwordConfirm: Joi.string().valid(Joi.ref("password")).required(),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 
 const validateAddress = (odj) => {
@@ -73,7 +73,7 @@ const validateAddress = (odj) => {
     postalCode: Joi.string(),
     alias: Joi.string().required(),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 
 const validateUpdateAddress = (odj) => {
@@ -84,7 +84,7 @@ const validateUpdateAddress = (odj) => {
     postalCode: Joi.string(),
     alias: Joi.string(),
   });
-  return schema.validate(odj, { abortEarly: false });
+  return schema.validate(odj);
 };
 
 
