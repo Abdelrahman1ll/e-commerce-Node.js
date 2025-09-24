@@ -116,11 +116,11 @@ docker-compose down -v
 
 # ===========================
 # Run swagger script inside a specific container (replace <container_id> with real container name/id)
-docker exec -it <container_id> npm run swagger
+docker compose exec e-commerce npm run swagger
 
 # ===========================
 # Run project tests inside a specific container (replace <container_id> with real container name/id)
-docker exec -it <container_id> npm run test
+docker compose exec e-commerce npm run test
 
 # First API from here
 http://localhost

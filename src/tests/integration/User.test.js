@@ -314,7 +314,7 @@ describe("Update Pessword /api/users/forgot-password/:id API", () => {
       .send({ passwordCurrent: "OldPass123", passwordNew: "abdo" });
     expect(res.status).toBe(400);
     expect(res.body.message).toBe(
-      "The password must contain at least 6 characters, a letter, and a phone."
+      "The password must contain at least 6 characters, a letter, and a number."
     );
   });
 

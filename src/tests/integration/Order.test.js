@@ -154,7 +154,6 @@ describe("Orders API", () => {
       const res = await request(app)
         .put(`/api/orders/${orderid}/pay`)
         .set("Authorization", `Bearer ${tokenAdmin}`);
-
       expect(res.status).toBe(200);
       expect(res.body.data.isPaid).toBe(true);
     });

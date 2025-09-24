@@ -69,7 +69,7 @@ describe("POST /api/auth/signup API", () => {
       name: "name",
       lastName: "lastName",
       email: "email12@example.com",
-      number: "01234567897",
+      phone: "01234567897",
       password: "admin1234",
       passwordConfirm: "admin1234",
     });
@@ -95,7 +95,7 @@ describe("POST /api/auth/signup API", () => {
       name: "name",
       lastName: "lastName",
       email: "email13@example.com",
-      number: "01234567897",
+      phone: "01234567897",
       password: "admin1234",
       passwordConfirm: "admin1234",
     });
@@ -103,12 +103,12 @@ describe("POST /api/auth/signup API", () => {
       name: "name",
       lastName: "lastName",
       email: "email12@example.com",
-      number: "01234567897",
+      phone: "01234567897",
       password: "admin1234",
       passwordConfirm: "admin1234",
     });
     expect(res.status).toBe(400);
-    expect(res.body.message).toBe("Email or phone number is already in use");
+    expect(res.body.message).toBe("Email or phone phone is already in use");
   });
 
   it("should sign up a user and return The password must contain at least 6 characters, a letter, and a number. 400", async () => {
@@ -116,7 +116,7 @@ describe("POST /api/auth/signup API", () => {
       name: "name",
       lastName: "lastName",
       email: "email13@example.com",
-      number: "01234567007",
+      phone: "01234567007",
       password: "admi",
       passwordConfirm: "admi",
     });
@@ -212,7 +212,6 @@ describe("POST /api/auth/logout API", () => {
       .post("/api/auth/logout")
       .set("Authorization", `Bearer ${token}`)
       .send();
-      console.log(res.body)
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("Logout successful");
   });
@@ -265,7 +264,6 @@ describe("POST /api/auth/resend-verification API", () => {
     const res = await request(app).post("/api/auth/resend-verification").send({
       email: "resend-verification@gmail.com",
     });
-    console.log(res.body)
     expect(res.status).toBe(400);
     expect(res.body.message).toBe("User already is Verified");
   });

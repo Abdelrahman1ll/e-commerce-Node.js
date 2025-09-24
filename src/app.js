@@ -67,16 +67,16 @@ app.use((req, res, next) => {
 // app.use(express.static(path.join(__dirname, "uploads/Maintenance")));
 
 // Prometheus middleware
-app.use(metricsMiddleware);
+// app.use(metricsMiddleware);
 
 // Endpoint لعرض الـ metrics
-app.get("/metrics", async (req, res) => {
-  res.set("Content-Type", register.contentType);
-  res.end(await register.metrics());
-});
+// app.get("/metrics", async (req, res) => {
+//   res.set("Content-Type", register.contentType);
+//   res.end(await register.metrics());
+// });
 
 // Memory watcher
-startMemoryWatcher();
+// startMemoryWatcher();
 
 // ============================
 // Routes

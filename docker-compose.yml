@@ -11,13 +11,13 @@ services:
       - ./.env
     deploy:
       replicas: ${APP_REPLICAS:-5}
-      resources:
-        limits:
-          cpus: "0.50"
-          memory: 256M
-        reservations:
-          cpus: "0.25"
-          memory: 128M
+      # resources:
+        # limits:
+        #   cpus: "0.50"
+        #   memory: 256M
+        # reservations:
+        #   cpus: "0.25"
+        #   memory: 128M
       update_config:
         parallelism: 1
         delay: 10s
@@ -83,21 +83,21 @@ services:
     depends_on:
       - nginx
 
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    depends_on:
-      - e-commerce
+  # prometheus:
+  #   image: prom/prometheus
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - "9090:9090"
+  #   depends_on:
+  #     - e-commerce
 
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3001:3000"
-    depends_on:
-      - prometheus
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3001:3000"
+  #   depends_on:
+  #     - prometheus
 
 volumes:
   mongo-db:
