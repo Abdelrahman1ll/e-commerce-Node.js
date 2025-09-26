@@ -18,9 +18,9 @@ router
   .post(
     verifyToken,
     authorize("admin"),
-    uploadProductImages,
-    resizeProductImages,
-    uploadImagesToDrive,
+    // uploadProductImages,
+    // resizeProductImages,
+    // uploadImagesToDrive,
     createProduct
   )
   .get(getProducts);
@@ -30,9 +30,9 @@ router
   .put(
     verifyToken,
     authorize("admin"),
-    uploadProductImages,
-    resizeProductImages,
-    uploadImagesToDrive,
+    // uploadProductImages,
+    // resizeProductImages,
+    // uploadImagesToDrive,
     updateProduct
   )
   .get(getProductById);

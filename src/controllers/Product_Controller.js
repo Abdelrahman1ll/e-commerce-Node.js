@@ -77,6 +77,10 @@ const getProductById = asyncHandler(async (req, res, next) => {
  **/
 const createProduct = asyncHandler(async (req, res, next) => {
   let { images, ...productData } = req.body;
+  // لو عدلت الصور من google احزف ده
+  if (!images) {
+    images = ["img.jpg"];
+  }
   const { error } = ValidationCreateProduct({ images, ...productData });
   if (error) return res.status(400).json({ error: error.details[0].message });
 
