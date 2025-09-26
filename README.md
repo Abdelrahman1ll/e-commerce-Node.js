@@ -17,6 +17,8 @@ This is the **backend** for an E-Commerce application built with:
 docker-compose up --build
 
 📦e-commerce-Node.js
+ ┣ 📂.github
+ ┃ ┗ 📂workflows
  ┣ 📂src
  ┃ ┣ 📂config
  ┃ ┣ 📂controllers
@@ -29,12 +31,13 @@ docker-compose up --build
  ┃ ┃ ┣ 📂integration
  ┃ ┃ ┗ 📂utils
  ┃ ┣ 📂utils
+ ┃ ┣ 📂validations
  ┃ ┣ 📜app.js
  ┃ ┗ 📜index.js
  ┣ 📜.dockerignore
  ┣ 📜.env
  ┣ 📜.gitignore
- ┣ 📜apiKey.json
+ ┣ 📜CONTRIBUTING.md
  ┣ 📜docker-compose.yml
  ┣ 📜Dockerfile
  ┣ 📜index.html
@@ -46,33 +49,25 @@ docker-compose up --build
  ┣ 📜README.md
  ┗ 📜vercel.json
 
-# =======================
 MONGODB_URI=
-
 MONGODB_URI_TEST=
-
 REDIS_URL=
 # =======================
 PORT=3000
-# =======================
-NODE_ENV="production" 
+NODE_ENV="development" 
 # production
 # development
 # =======================
-APP_REPLICAS=5
+APP_REPLICAS=
 # =======================
 BASE_URL=http://127.0.0.1:3000
 # =======================
 JWT_SECRET_REFRESH=
-
 JWT_SECRET_ACCESS=
-
 JWT_EXPIRES_IN_REFRESH=
-
 JWT_EXPIRES_IN_ACCESS=
 # =======================
 EMAIL_USER=
-
 EMAIL_PASS=
 # =======================
 JWT_SECRET_EMAIL=
@@ -80,7 +75,27 @@ JWT_SECRET_EMAIL=
 GOOGLE_CLIENT_ID=
 # =======================
 FOLDER_ID=
+TYPE=
+PROJECT_ID=
+PRIVATE_KEY_ID=
+PRIVATE_KEY=
+CLIENT_EMAIL=
+CLIENT_ID=
+AUTH_URI=
+TOKEN_URI=
+AUTH_PROVIDER_x509_CERT_URI=
+CLIENT_x509_CERT_URI=
+UNIVERSE_DOMAIN=
 # =======================
+PAYMOB_API_KEY=
+INTEGRATION_ID=
+HMAC_SECRET=
+# =======================
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+# =======================
+
 
 
 # Run containers in development mode with a new build
