@@ -6,11 +6,16 @@ const {
   createProduct,
   updateProduct,
 } = require("../controllers/Product_Controller");
+// const {
+//   uploadProductImages,
+//   resizeProductImages,
+//   uploadImagesToDrive,
+// } = require("../controllers/Upload_Google");
 const {
   uploadProductImages,
   resizeProductImages,
-  uploadImagesToDrive,
-} = require("../controllers/Upload_Google");
+  uploadImagesToCloudinary,
+} = require("../controllers/Upload_Cloudinary");
 const { verifyToken, authorize } = require("../middleware/verifyToken");
 // في موشكله في Google Drive
 router
@@ -18,9 +23,9 @@ router
   .post(
     verifyToken,
     authorize("admin"),
-    // uploadProductImages,
-    // resizeProductImages,
-    // uploadImagesToDrive,
+    uploadProductImages,
+    resizeProductImages,
+    uploadImagesToCloudinary,
     createProduct
   )
   .get(getProducts);
@@ -30,9 +35,9 @@ router
   .put(
     verifyToken,
     authorize("admin"),
-    // uploadProductImages,
-    // resizeProductImages,
-    // uploadImagesToDrive,
+    uploadProductImages,
+    resizeProductImages,
+    uploadImagesToCloudinary,
     updateProduct
   )
   .get(getProductById);
