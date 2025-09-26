@@ -4,18 +4,63 @@ const { Order } = require("../models/Order_Model");
 const { User } = require("../models/User_Model");
 const { Cart } = require("../models/Cart_Model");
 const nodemailer = require("nodemailer");
-const crypto = require("crypto");
 const axios = require("axios");
 
 const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
 const INTEGRATION_ID = process.env.INTEGRATION_ID;
-const PAYMOB_IFRAME_ID = process.env.PAYMOB_IFRAME_ID;
+const HMAC_SECRET = process.env.HMAC_SECRET;
+let authToken = "";
 /**
  * Create a new order
  * @route POST /api/order-card
  * @access Private
  */
-const createOrder = asyncHandler(async (req, res, next) => {
+
+// ✅ 1- Authentication
+async function authenticate() {
+  const response = await axios.post(
+    "https://accept.paymob.com/api/auth/tokens",
+    {
+      api_key: PAYMOB_API_KEY,
+    }
+  );
+  authToken = response.data.token;
+  return authToken;
+}
+
+// ✅ 2- Create Order
+async function createOrder(amountCents, currency = "EGP") {
+  const response = await axios.post(
+    "https://accept.paymob.com/api/ecommerce/orders",
+    {
+      auth_token: authToken,
+      delivery_needed: "false",
+      amount_cents: amountCents,
+      currency: currency,
+      items: [],
+    }
+  );
+  return response.data;
+}
+
+// ✅ 3- Payment Key Request
+async function getPaymentKey(orderId, amountCents, billingData) {
+  const response = await axios.post(
+    "https://accept.paymob.com/api/acceptance/payment_keys",
+    {
+      auth_token: authToken,
+      amount_cents: amountCents,
+      expiration: 3600,
+      order_id: orderId,
+      billing_data: billingData,
+      currency: "EGP",
+      integration_id: INTEGRATION_ID,
+    }
+  );
+  return response.data.token;
+}
+
+const createOrderCard = asyncHandler(async (req, res, next) => {
   const { cartId, shippingAddress } = req.body;
 
   // Fetch cart and user
@@ -26,9 +71,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
     return next(new ApiError("User not found", 404));
   }
 
-  // Generate order number
-  const lastOrder = await Order.findOne().sort({ orderNumber: -1 });
-  const newOrderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1001;
+  const newOrderNumber = Math.floor(100000 + Math.random() * 900000);
 
   // Create order
   const order = new Order({
@@ -45,53 +88,36 @@ const createOrder = asyncHandler(async (req, res, next) => {
   // Clear user's cart
   await Cart.findByIdAndDelete(cartId);
 
-   // Step A: Get auth_token from Paymob
-  const authResp = await axios.post("https://accept.paymob.com/api/auth/tokens", {
-    api_key: PAYMOB_API_KEY,
-  });
-  const authToken = authResp.data.token;
+  // 1- Authenticate
+  await authenticate();
 
-  // Step B: Create order in Paymob
-  const orderResp = await axios.post("https://accept.paymob.com/api/ecommerce/orders", {
-    auth_token: authToken,
-    delivery_needed: "false",
-    amount_cents: order.totalPrice * 100, // بالقرش
-    currency: "EGP",
-    items: order.cartItems.map((item) => ({
-      name: item.product.title,
-      amount_cents: item.price * 100,
-      description: "Product",
-      quantity: item.count,
-    })),
-  });
-  const paymobOrderId = orderResp.data.id;
+  // 2- Create Order
+  const createdOrder = await createOrder(order.totalPrice * 100);
 
-  // Step C: Get payment key
-  const payKeyResp = await axios.post("https://accept.paymob.com/api/acceptance/payment_keys", {
-    auth_token: authToken,
-    amount_cents: order.totalPrice * 100,
-    expiration: 3600,
-    order_id: paymobOrderId,
-    billing_data: {
-      first_name: user.name?.split(" ")[0] || "First",
-      last_name: user.name?.split(" ")[1] || "Last",
-      email: user.email,
-      phone_number: shippingAddress.phone,
-      apartment: "NA",
-      floor: "NA",
-      street: shippingAddress.details,
-      building: "NA",
-      city: shippingAddress.city,
-      country: "EG",
-      state: "NA",
-    },
-    currency: "EGP",
-    integration_id: parseInt(INTEGRATION_ID),
-  });
-  const paymentToken = payKeyResp.data.token;
+  // 3- Billing data (لازم تبعته حسب المتطلبات)
+  const billingData = {
+    apartment: "NA",
+    email: user.email,
+    floor: "NA",
+    first_name: user.name,
+    last_name: user.lastName,
+    street: "NA",
+    building: "NA",
+    phone_number: user.phone,
+    city: "Cairo",
+    country: "EG",
+    state: "NA",
+  };
 
-  // Step D: Build iframe URL (use PAYMOB_IFRAME_ID not INTEGRATION_ID)
-  const iframeURL = `https://accept.paymob.com/api/acceptance/iframes/${PAYMOB_IFRAME_ID}?payment_token=${paymentToken}`;
+  // 4- Get Payment Key
+  const paymentToken = await getPaymentKey(
+    createdOrder.id,
+    order.totalPrice * 100,
+    billingData
+  );
+
+  // 5- Build Redirect URL (صفحة الدفع)
+  const redirectURL = `https://accept.paymob.com/api/acceptance/iframes/${INTEGRATION_ID}?payment_token=${paymentToken}`;
 
   // Send confirmation email
   const transporter = nodemailer.createTransport({
@@ -224,12 +250,108 @@ const createOrder = asyncHandler(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     data: order,
-    iframeURL,
+    redirectURL,
   });
 });
 
-module.exports = { createOrder };
+// ✅ Helper: Verify HMAC signature
+function verifyHmac(data, hmac) {
+  const orderedKeys = [
+    "amount_cents",
+    "created_at",
+    "currency",
+    "error_occured",
+    "has_parent_transaction",
+    "id",
+    "integration_id",
+    "is_3d_secure",
+    "is_auth",
+    "is_capture",
+    "is_refunded",
+    "is_standalone_payment",
+    "is_voided",
+    "order.id",
+    "owner",
+    "pending",
+    "source_data.pan",
+    "source_data.sub_type",
+    "source_data.type",
+    "success",
+  ];
 
-// 4111 1111 1111 1111
-// 12/30
-// 123
+  const concatenated = orderedKeys
+    .map((key) => {
+      const keys = key.split(".");
+      let value = data;
+      keys.forEach((k) => {
+        if (value) value = value[k];
+      });
+      return value !== undefined && value !== null ? value.toString() : "";
+    })
+    .join("");
+
+  const generatedHmac = crypto
+    .createHmac("sha512", HMAC_SECRET)
+    .update(concatenated)
+    .digest("hex");
+
+  return generatedHmac === hmac;
+}
+
+// ✅ Webhook endpoint
+const webhook = asyncHandler(async (req, res, next) => {
+  const { obj, hmac } = req.body;
+
+  if (!obj || !hmac) {
+    return next(new ApiError("Invalid request", 400));
+  }
+
+  // تحقق من صحة البيانات
+  const isValid = verifyHmac(obj, hmac);
+
+  if (!isValid) {
+    return next(new ApiError("HMAC verification failed", 400));
+  }
+
+  if (obj.success) {
+    // العملية ناجحة
+    const order = await Order.findById(obj.order.id);
+
+    if (!order) {
+      return next(new ApiError("Order not found", 404));
+    }
+
+    if (!order.isPaid) {
+      order.isPaid = true;
+      order.paidAt = Date.now();
+      await order.save();
+    }
+  } else {
+    return next(new ApiError("Payment failed", 400));
+  }
+});
+
+const isPaid = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const order = await Order.findById(id);
+  if (!order) {
+    return next(new ApiError("Order not found", 404));
+  }
+
+  // ✅ تحديث حالة الدفع
+  order.isPaid = true;
+  order.paidAt = Date.now();
+
+  await order.save();
+
+  res.status(200).json({
+    message: "Order marked as paid",
+    status: "success",
+  });
+});
+
+module.exports = {
+  createOrderCard,
+  webhook,
+  isPaid,
+};

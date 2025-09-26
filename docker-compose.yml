@@ -5,7 +5,6 @@ services:
       target: ${NODE_ENV:-production}
     volumes:
       - ./src:/app/src:ro
-      - ./Uploads/Products:/app/Uploads/Products
     environment:
       - NODE_ENV=${NODE_ENV:-production}
     env_file:

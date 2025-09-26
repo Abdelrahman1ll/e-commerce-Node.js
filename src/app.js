@@ -15,11 +15,11 @@ const globalError = require("./middleware/errorMiddleware");
 const Routers = require("./routes/index");
 
 // Prometheus client
-const {
-  register,
-  metricsMiddleware,
-  startMemoryWatcher,
-} = require("./utils/metrics");
+// const {
+//   register,
+//   metricsMiddleware,
+//   startMemoryWatcher,
+// } = require("./utils/metrics");
 
 const app = express();
 // ============================
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 });
 
 // ملفات ثابتة (صور المنتجات والصيانة)
-app.use(express.static(path.join(__dirname, "../Uploads/Products")));
+// app.use(express.static(path.join(__dirname, "../Uploads/Products")));
 // app.use(express.static(path.join(__dirname, "uploads/Maintenance")));
 
 // Prometheus middleware

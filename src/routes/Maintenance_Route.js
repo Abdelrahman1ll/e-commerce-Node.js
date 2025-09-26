@@ -23,8 +23,8 @@ router
   .post(
     verifyToken,
     authorize("user"),
-    // uploadSingleImage,
-    // resizeAndUploadSingleImage,
+    uploadSingleImage,
+    resizeAndUploadSingleImage,
     createMaintenance
   );
 

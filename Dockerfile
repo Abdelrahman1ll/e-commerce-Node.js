@@ -1,4 +1,4 @@
-FROM node:latest as base
+FROM node:24 as base
 
 
 FROM base as development

@@ -44,17 +44,11 @@ const uploadImagesProduct = async (req, res, next) => {
 
   if (req.body.dleteImages) {
     req.body.dleteImages.forEach((filename) => {
-      const filePath = path.join(__dirname, "../../Uploads/Products", filename);
-      console.log("filePath" + filePath);
+      const filePath = path.join(
+        __dirname,
+        `../../Uploads/Products/${filename}`
+      );
       fs.unlink(filePath);
-      // if (fs.existsSync(filePath)) {
-      //   try {
-      //     fs.unlinkSync(filePath);
-      //     console.log(`Deleted old image: ${filename}`);
-      //   } catch (err) {
-      //     console.error(`Error deleting file ${filename}:`, err);
-      //   }
-      // }
     });
   }
 
@@ -65,12 +59,40 @@ const uploadImagesProduct = async (req, res, next) => {
     }
 
     // تجهيز روابط الصور الجديدة
-    if (req.files && req.files.length > 0) {
-      req.body.images = req.files.map((file) => `${file.filename}`);
-    }
+
+    req.body.images = req.files.map((file) => file.filename);
 
     next();
   });
 };
 
 module.exports = uploadImagesProduct;
+
+// ===================================
+
+const rimraf = require("rimraf");
+
+const uploadsDir =
+  __dirname +
+  `../../Uploads/Products/images-Product-1758754406343-29d094d4.png`;
+
+fs.readdir(uploadsDir, (err, files) => {
+  files.forEach((file) => {
+    fs.stat(path.join(uploadsDir, file), (err, stat) => {
+      let endTime, now;
+      if (err) {
+        return console.log(err);
+      }
+      now = new Date().getTime();
+      endTime = now - new Date(stat.ctime).getTime() + 150000;
+      if (now > endTime) {
+        return rimraf(path.join(uploadsDir, file), (err) => {
+          if (err) {
+            return console.log(err);
+          }
+        });
+      }
+      console.log("File deleted successfully");
+    });
+  });
+});
