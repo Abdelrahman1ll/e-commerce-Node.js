@@ -6,18 +6,13 @@ const {
   createProduct,
   updateProduct,
 } = require("../controllers/Product_Controller");
-// const {
-//   uploadProductImages,
-//   resizeProductImages,
-//   uploadImagesToDrive,
-// } = require("../controllers/Upload_Google");
+
 const {
   uploadProductImages,
   resizeProductImages,
   uploadImagesToCloudinary,
 } = require("../controllers/Upload_Cloudinary");
 const { verifyToken, authorize } = require("../middleware/verifyToken");
-// في موشكله في Google Drive
 router
   .route("/")
   .post(

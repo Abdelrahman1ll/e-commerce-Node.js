@@ -37,6 +37,11 @@ const productSchema = new mongoose.Schema({
     ref: "Category",
     required: true,
   },
+  dleteImages: [
+    {
+      type: String,
+    },
+  ],
   quantity: {
     type: Number,
     required: true,

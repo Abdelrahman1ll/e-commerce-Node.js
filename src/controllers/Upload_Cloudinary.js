@@ -31,7 +31,7 @@ exports.resizeProductImages = asyncHandler(async (req, res, next) => {
       req.files.images.map(async (file) => {
         const filename = `product-${uuidv4()}.jpeg`;
         const resizedBuffer = await sharp(file.buffer)
-          .resize(800, 800)
+          .resize(800, 800, { fit: "inside", withoutEnlargement: true })
           .jpeg({ quality: 90 })
           .toBuffer();
         return {
@@ -59,22 +59,25 @@ exports.uploadImagesToCloudinary = asyncHandler(async (req, res, next) => {
       return next(new ApiError("Product not found", 404));
     }
 
-    const dleteImg = req.body.dleteImg || [];
+    const dleteImages = req.body.dleteImages || [];
 
     // احذف الصور من Cloudinary
-    for (const imgUrl of dleteImg) {
+    for (const imgUrl of dleteImages) {
       const publicIdMatch = imgUrl.match(/\/([^/]+)\.jpg/); // استخرج public_id
       if (publicIdMatch) {
         try {
           await cloudinary.uploader.destroy(publicIdMatch[1]);
         } catch (err) {
-          console.error(`❌ فشل حذف الصورة من Cloudinary: ${imgUrl}`, err.message);
+          console.error(
+            `❌ فشل حذف الصورة من Cloudinary: ${imgUrl}`,
+            err.message
+          );
         }
       }
     }
 
     UpdateImgs.images = UpdateImgs.images.filter(
-      (img) => !dleteImg.includes(img)
+      (img) => !dleteImages.includes(img)
     );
 
     await UpdateImgs.save();
@@ -99,11 +102,44 @@ exports.uploadImagesToCloudinary = asyncHandler(async (req, res, next) => {
 
     if (UpdateImgs && UpdateImgs.images) {
       req.body.images = [...UpdateImgs.images, ...newUrls];
-      req.body.dleteImg = [];
+      req.body.dleteImages = [];
     } else {
       req.body.images = newUrls;
     }
   }
 
   next();
+});
+
+// رفع صورة واحدة
+exports.uploadSingleImage = upload.single("image");
+
+exports.resizeAndUploadSingleImage = asyncHandler(async (req, res, next) => {
+  if (!req.file) return next();
+
+  try {
+    const filename = `maintenance-${uuidv4()}.jpeg`;
+
+    const resizedBuffer = await sharp(req.file.buffer)
+      .resize(800, 800, { fit: "inside" })
+      .jpeg({ quality: 90 })
+      .toBuffer();
+
+    const uploadPromise = () =>
+      new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "maintenance", public_id: filename },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        );
+        streamifier.createReadStream(resizedBuffer).pipe(stream);
+      });
+
+    req.body.image = await uploadPromise();
+    next();
+  } catch (error) {
+    return next(new ApiError("Failed to upload image to Cloudinary", 500));
+  }
 });

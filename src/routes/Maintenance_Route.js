@@ -11,7 +11,7 @@ const { verifyToken, authorize } = require("../middleware/verifyToken");
 const {
   uploadSingleImage,
   resizeAndUploadSingleImage,
-} = require("../controllers/Upload_Google");
+} = require("../controllers/Upload_Cloudinary");
 
 router.route("/user").get(verifyToken, authorize("user"), getUserMaintenance);
 
