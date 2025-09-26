@@ -5,7 +5,7 @@ const { User } = require("../models/User_Model");
 const { Cart } = require("../models/Cart_Model");
 const nodemailer = require("nodemailer");
 const axios = require("axios");
-
+// في موشكله في ال IFrame paymob انا مش عارف اجيبها
 const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
 const INTEGRATION_ID = process.env.INTEGRATION_ID;
 const HMAC_SECRET = process.env.HMAC_SECRET;

@@ -10,9 +10,11 @@ const verifyToken = asyncHandler(async (req, res, next) => {
     token = authorization.split(" ")[1];
   }
   if (!token) {
-    throw new ApiError(
-      "You are not logged in. Please log in to access this page.",
-      401
+    return next(
+      new ApiError(
+        "You are not logged in. Please log in to access this page.",
+        401
+      )
     );
   }
 
@@ -21,22 +23,25 @@ const verifyToken = asyncHandler(async (req, res, next) => {
     req.user = await User.findById(decoded.UserInfo.id).select("-password");
 
     if (!req.user) {
-      throw new ApiError("User not found", 401);
+      return next(new ApiError("User not found", 401));
     }
     req.userId = req.user._id;
 
     next(); // السماح بالوصول بعد التحقق
   } catch (error) {
-    next(new ApiError(error.message, 401))
+    if (error.name === "TokenExpiredError") {
+      return next(new ApiError("JWT expired, please refresh your token.", 401));
+    } else {
+      return next(new ApiError("Invalid token", 401));
+    }
   }
 });
 
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      throw new ApiError(
-        "You do not have permission to access this path.",
-        403
+      return next(
+        new ApiError("You do not have permission to access this path.", 403)
       );
     }
     next();
