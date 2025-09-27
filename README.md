@@ -51,16 +51,19 @@ docker-compose up --build
 
 MONGODB_URI=
 MONGODB_URI_TEST=
+MONGO_INITDB_ROOT_PASSWORD=
+# =======================
+ME_CONFIG_BASICAUTH_PASSWORD=
+# =======================
 REDIS_URL=
+REDIS_PASSWORD=
 # =======================
 PORT=3000
-NODE_ENV="development" 
-# production
-# development
+NODE_ENV="production" 
 # =======================
 APP_REPLICAS=
 # =======================
-BASE_URL=http://127.0.0.1:3000
+BASE_URL=http://127.0.0.1
 # =======================
 JWT_SECRET_REFRESH=
 JWT_SECRET_ACCESS=
