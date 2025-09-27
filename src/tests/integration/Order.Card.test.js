@@ -10,36 +10,49 @@ const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
 
 const connectTestDB = require("../utils/db_Test");
-const {
-  createAndLoginUser,
-  createAndLoginAdmin,
-} = require("../utils/Auth_Helper");
-const crypto = require("crypto");
 
 describe("Paymob Integration", () => {
   let token;
   let tokenAdmin;
-  let user;
   let product;
   let cart;
+  let orderid;
 
   beforeAll(async () => {
     await connectTestDB();
 
-    // 🔹 إنشاء admin user وتسجيل الدخول
-    token = await createAndLoginUser();
-    tokenAdmin = await createAndLoginAdmin();
-
     // 🔹 إنشاء user عادي
-    user = await User.create({
+    await User.create({
       name: "Abdo",
       lastName: "Mohamed",
-      email: "abdo@test.com",
+      email: "7yhhyy@test.com",
       phone: "0123456789",
       password: "12345678",
       isVerified: true,
     });
 
+    const res = await request(app).post("/api/auth/login").send({
+      email: "7yhhyy@test.com",
+      password: "12345678",
+    });
+
+    token = res.body.accessToken;
+    await User.create({
+      name: "Admin",
+      lastName: "Admin",
+      email: "admin_1@test.com",
+      phone: "0123456789",
+      password: "12345678",
+      isVerified: true,
+      role: "admin",
+    });
+
+    const resAdmin = await request(app).post("/api/auth/login").send({
+      email: "admin_1@test.com",
+      password: "12345678",
+    });
+
+    tokenAdmin = resAdmin.body.accessToken;
     // 🔹 إنشاء category & brand & product
     const category = await Category.create({ name: "Choco" });
     const brand = await Brand.create({ name: "Nestle" });
@@ -67,6 +80,7 @@ describe("Paymob Integration", () => {
     await Category.deleteMany();
     await Brand.deleteMany();
     await Cart.deleteMany();
+    await User.deleteMany();
     await mongoose.connection.close();
   });
 
@@ -76,7 +90,7 @@ describe("Paymob Integration", () => {
       .post("/api/order-card")
       .set("Authorization", `Bearer ${token}`)
       .send({
-        cartId: cart._id,
+        cartId: cart.body.data?._id,
         shippingAddress: {
           alias: "المنزل",
           details: "تفاصيل العنوان",
@@ -85,7 +99,7 @@ describe("Paymob Integration", () => {
           postalCode: "1234",
         },
       });
-
+    orderid = res?.body?.data._id;
     expect(res.status).toBe(201);
     expect(res.body.status).toBe("success");
   });
@@ -179,23 +193,10 @@ describe("Paymob Integration", () => {
 
   // ✅ 3- اختبار API isPaid
   it("should mark order as paid manually", async () => {
-    const order = await Order.create({
-      user: user._id,
-      cartItems: [{ product: product._id, count: 1, price: 100 }],
-      shippingAddress: {
-        alias: "Home",
-        details: "Street 1",
-        phone: "0123456789",
-        city: "Cairo",
-        postalCode: "1234",
-      },
-    });
-
     const res = await request(app)
-      .put(`/api/is-paid/${order._id}`)
+      .put(`/api/is-paid/${orderid}`)
       .set("Authorization", `Bearer ${tokenAdmin}`)
       .send();
-
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("Order marked as paid");
   });

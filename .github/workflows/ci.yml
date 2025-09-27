@@ -24,8 +24,8 @@ jobs:
       - name: Create .env file
         run: |
           cat > .env << EOF
-          NODE_ENV: development
-          APP_REPLICAS: 1
+          NODE_ENV:development
+          APP_REPLICAS:1
           MONGODB_URI={{ secrets.MONGODB_URI }}
           MONGODB_URI_TEST={{ secrets.MONGODB_URI_TEST }}
           MONGO_INITDB_ROOT_PASSWORD={{ secrets.MONGO_INITDB_ROOT_PASSWORD }}

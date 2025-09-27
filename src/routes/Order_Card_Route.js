@@ -13,6 +13,6 @@ router
 
 router.route("/paymob/webhook").post(webhook);
 
-router.route("/is-paid/:id").post(verifyToken, authorize("admin"), isPaid);
+router.route("/is-paid/:id").put(verifyToken, authorize("admin"), isPaid);
 
 module.exports = router;

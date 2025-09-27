@@ -32,7 +32,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
     if (error.name === "TokenExpiredError") {
       return next(new ApiError("JWT expired, please refresh your token.", 401));
     } else {
-      return next(new ApiError("Invalid token", 401));
+      return next(new ApiError("jwt malformed", 401));
     }
   }
 });
