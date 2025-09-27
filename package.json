@@ -4,6 +4,7 @@
     "start": "set NODE_ENV=production && node src/index.js",
     "test": "jest --runInBand",
     "test:watch": "jest --watchAll",
+    "test:ci": "jest --forceExit --detectOpenHandles",
     "swagger": "node src/swagger/swagger-autogen.js"
   },
   "engines": {

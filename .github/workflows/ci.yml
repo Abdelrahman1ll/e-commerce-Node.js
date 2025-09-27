@@ -78,7 +78,7 @@ jobs:
       - name: Run tests
         run: |
           # استخدم اسم الخدمة من docker-compose.yml بدلاً من اسم الكونتينر
-          docker compose exec e-commerce npm run test
+          docker compose exec e-commerce npm run test:ci
 
       # 6. عرض سجلات الأخطاء في حالة الفشل
       - name: Show logs on failure
