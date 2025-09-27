@@ -26,37 +26,40 @@ jobs:
           cat > .env << EOF
           NODE_ENV:development
           APP_REPLICAS:1
-          MONGODB_URI={{ secrets.MONGODB_URI }}
-          MONGODB_URI_TEST={{ secrets.MONGODB_URI_TEST }}
-          MONGO_INITDB_ROOT_PASSWORD={{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
           # =======================
-          ME_CONFIG_BASICAUTH_PASSWORD={{ secrets.ME_CONFIG_BASICAUTH_PASSWORD }}
+          MONGODB_URI=${{ secrets.MONGODB_URI }}
+          MONGODB_URI_TEST=${{ secrets.MONGODB_URI_TEST }}
+          MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
           # =======================
-          REDIS_URL={{ secrets.REDIS_URL }}
-          REDIS_PASSWORD={{ secrets.REDIS_PASSWORD }}
+          ME_CONFIG_BASICAUTH_PASSWORD=${{ secrets.ME_CONFIG_BASICAUTH_PASSWORD }}
           # =======================
-          PORT={{ secrets.PORT }}
-          BASE_URL={{ secrets.BASE_URL }}
+          REDIS_URL=${{ secrets.REDIS_URL }}
+          REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
           # =======================
-          JWT_SECRET_REFRESH={{ secrets.JWT_SECRET_REFRESH }}
-          JWT_SECRET_ACCESS={{ secrets.JWT_SECRET_ACCESS }}
-          JWT_EXPIRES_IN_REFRESH={{ secrets.JWT_EXPIRES_IN_REFRESH }}
-          JWT_EXPIRES_IN_ACCESS={{ secrets.JWT_EXPIRES_IN_ACCESS }}
+          PORT=${{ secrets.PORT }}
+          BASE_URL=${{ secrets.BASE_URL }}
           # =======================
-          EMAIL_USER={{ secrets.EMAIL_USER }}
-          EMAIL_PASS={{ secrets.EMAIL_PASS }}
+          JWT_SECRET_REFRESH=${{ secrets.JWT_SECRET_REFRESH }}
+          JWT_SECRET_ACCESS=${{ secrets.JWT_SECRET_ACCESS }}
+          JWT_EXPIRES_IN_REFRESH=${{ secrets.JWT_EXPIRES_IN_REFRESH }}
+          JWT_EXPIRES_IN_ACCESS=${{ secrets.JWT_EXPIRES_IN_ACCESS }}
           # =======================
-          JWT_SECRET_EMAIL={{ secrets.JWT_SECRET_EMAIL }}
+          EMAIL_USER=${{ secrets.EMAIL_USER }}
+          EMAIL_PASS=${{ secrets.EMAIL_PASS }}
           # =======================
-          GOOGLE_CLIENT_ID={{ secrets.GOOGLE_CLIENT_ID }}
+          JWT_SECRET_EMAIL=${{ secrets.JWT_SECRET_EMAIL }}
           # =======================
-          PAYMOB_API_KEY={{ secrets.PAYMOB_API_KEY }}
-          INTEGRATION_ID={{ secrets.INTEGRATION_ID }}
-          HMAC_SECRET={{ secrets.HMAC_SECRET }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
           # =======================
-          CLOUDINARY_CLOUD_NAME={{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY={{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET={{ secrets.CLOUDINARY_API_SECRET }}
+          PAYMOB_API_KEY=${{ secrets.PAYMOB_API_KEY }}
+          INTEGRATION_ID=${{ secrets.INTEGRATION_ID }}
+          HMAC_SECRET=${{ secrets.HMAC_SECRET }}
+          # =======================
+          CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          # =======================
+          SIGNUP_GOOGLE_TEST=${{ secrets.SIGNUP_GOOGLE_TEST }}
           # =======================
           EOF
 

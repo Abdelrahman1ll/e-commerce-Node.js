@@ -28,10 +28,11 @@ describe("POST /api/auth/signup-google API", () => {
     );
   });
   it("should sign up a user via Google and return success", async () => {
-    const res = await request(app).post("/api/auth/signup-google").send({
-      token:
-        "eyJhbGciOiJSUzI1NiIsImtpZCI6IjJkN2VkMzM4YzBmMTQ1N2IyMTRhMjc0YjVlMGU2NjdiNDRhNDJkZGUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2NTQ2NjUzODE0NzgtajhybGpoZWVwaGlhOXU0aDl0bTMwczUwY2xtdW5lb20uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2NTQ2NjUzODE0NzgtajhybGpoZWVwaGlhOXU0aDl0bTMwczUwY2xtdW5lb20uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTQ4NzEwOTQ2MjE3MDk2MzA3MDUiLCJlbWFpbCI6ImFiZG9tb2hhbWVkMjIwMDA2NkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmJmIjoxNzU2NjcyNDQ1LCJuYW1lIjoiQWJkZWxyYWhtYW4gbW9oYW1lZCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKUXhEVkdLc2p5cWJNckpkS2hNZVNFZ2tWQWNKRzBKMjZ0d3FUS2tNYmpoYk1fRWJJPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkFiZGVscmFobWFuIiwiZmFtaWx5X25hbWUiOiJtb2hhbWVkIiwiaWF0IjoxNzU2NjcyNzQ1LCJleHAiOjE3NTY2NzYzNDUsImp0aSI6IjI5N2JmMGVjNzNiYmI2ZGY5MzA3MTA2YzM0MmQ1ZWMyMTZhMDhlOTkifQ.XUvNWfY547zHCA0g9Vu0AKFf-0aPpXvIdrxVKEvvBlIxv9czuDM81lk7eSqnQK-4vQT4O6zNeNS8VPZyxY7i8KzCgzJGSCEBM-4gWYQCP2TrdE7vXZy2EM5r2-xEWH0x2xaeUekJOaqPmTFgNd4cKv8jvZF05rLxmZz5GYx8CxKJc7cyrTUptHEgU57ghoiFRvXnX8zVshuuP4dWWPUyuN_3q39pymBQWj40GqIIhnJs9eWXE0JJ6vE1TAFG8v7gZVvLitlW8ecsL0zwoy5P7wf4jrbQwYw2EbJXkDdQCi4PqYNe1DjbqV-_Lf0F_Wc80nkdI4k0tzP5jJy3Khdvqw",
-    });
+    const res = await request(app)
+      .post("/api/auth/signup-google")
+      .send({
+        token: process.env.SIGNUP_GOOGLE_TEST,
+      });
     expect(res.status).toBe(200);
     expect(res.body.status).toBe("success");
   });

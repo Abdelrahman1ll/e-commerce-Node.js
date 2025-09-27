@@ -98,7 +98,8 @@ CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 # =======================
-
+SIGNUP_GOOGLE_TEST=
+# =======================
 
 
 # Run containers in development mode with a new build
