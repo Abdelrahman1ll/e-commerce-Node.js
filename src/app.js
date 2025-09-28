@@ -62,15 +62,38 @@ app.use((req, res, next) => {
 });
 
 if(process.env.NODE_ENV === "production") {
-// Rate Limiting 
-app.use(
-  rateLimit({
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 200, // Limit each IP to 200 requests per windowMs
-  })
-);
-}
 
+// limiter خاص بالـ GET
+const getLimiter = rateLimit({
+  windowMs: 60 * 1000, // دقيقة واحدة
+  max: 1000, // أقصى عدد GET في الدقيقة
+  message: {
+    status: "error",
+    message: "Too many GET requests, please try again later!",
+  },
+  headers: true,
+});
+
+// limiter خاص بالـ POST/PUT/DELETE
+const writeLimiter = rateLimit({
+  windowMs: 60 * 1000, // دقيقة واحدة
+  max: 100, // أقصى عدد طلبات كتابة في الدقيقة
+  message: {
+    status: "error",
+    message: "Too many requests, please try again later!",
+  },
+  headers: true,
+});
+
+// تطبيقهم حسب نوع الميثود
+app.use((req, res, next) => {
+  if (req.method === "GET") {
+    return getLimiter(req, res, next);
+  } else {
+    return writeLimiter(req, res, next);
+  }
+});
+}
 
 // ملفات ثابتة (صور المنتجات والصيانة)
 // app.use(express.static(path.join(__dirname, "../Uploads/Products")));

@@ -59,7 +59,7 @@ REDIS_URL=
 REDIS_PASSWORD=
 # =======================
 PORT=3000
-NODE_ENV="production" 
+NODE_ENV="production"
 # =======================
 APP_REPLICAS=
 # =======================
