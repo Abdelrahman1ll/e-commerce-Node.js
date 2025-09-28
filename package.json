@@ -57,7 +57,8 @@
     "uuid": "^11.1.0",
     "redis":"^5.8.2",
     "cloudinary":"^2.7.0",
-    "streamifier":"^0.1.1"
+    "streamifier":"^0.1.1",
+    "express-rate-limit":"^8.1.0"
   },
   "devDependencies": {
     "express-list-endpoints": "^7.1.1",

@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const mongoSanitize = require("express-mongo-sanitize");
-
+const rateLimit = require("express-rate-limit");
 const ApiError = require("./utils/ApiError");
 const globalError = require("./middleware/errorMiddleware");
 const Routers = require("./routes/index");
@@ -60,6 +60,17 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// if(process.env.NODE_ENV === "production") {
+// Rate Limiting 
+app.use(
+  rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 2, // Limit each IP to 200 requests per windowMs
+  })
+);
+// }
+
 
 // ملفات ثابتة (صور المنتجات والصيانة)
 // app.use(express.static(path.join(__dirname, "../Uploads/Products")));
