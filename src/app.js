@@ -61,15 +61,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// if(process.env.NODE_ENV === "production") {
+if(process.env.NODE_ENV === "production") {
 // Rate Limiting 
 app.use(
   rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 2, // Limit each IP to 200 requests per windowMs
+    max: 200, // Limit each IP to 200 requests per windowMs
   })
 );
-// }
+}
 
 
 // ملفات ثابتة (صور المنتجات والصيانة)
