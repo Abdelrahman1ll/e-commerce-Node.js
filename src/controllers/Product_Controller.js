@@ -9,6 +9,7 @@ const ApiFeatures = require("../utils/ApiFeatures");
 const { Category } = require("../models/Category_Model");
 const { Brand } = require("../models/Brand_Model");
 const redisClient = require("../config/redis");
+const sendEmail = require("../utils/ApiEmail");
 /**
  * @desc   Get Products
  * @route   /api/product
@@ -114,7 +115,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
  * @access  Private
  **/
 const updateProduct = asyncHandler(async (req, res, next) => {
-  const { images , ...productData } = req.body;
+  const { images, ...productData } = req.body;
   const productId = req.params.id;
 
   const { error } = ValidationUpdateProduct({

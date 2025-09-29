@@ -1,12 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
-const nodemailer = require("nodemailer");
-const { mongoose } = require("mongoose");
 const { Order } = require("../models/Order_Model");
 const { Cart } = require("../models/Cart_Model");
 const { User } = require("../models/User_Model");
 const { Product } = require("../models/Product_Model");
-
+const sendEmail = require("../utils/ApiEmail");
 /**
  * @desc    Get all orders
  * @route   GET /api/orders
@@ -84,25 +82,9 @@ const createOrder = asyncHandler(async (req, res, next) => {
   // ✅ حذف السلة
   await Cart.findByIdAndDelete(cartId);
   await user.save();
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: true, // true for 465, false for other ports
 
-    tls: {
-      rejectUnauthorized: false, // ✅ تجاوز مشكلة الشهادة
-    },
-  });
-
-  const mailOptions = {
-    from: `My Company <${process.env.EMAIL_USER}>`,
-    to: "abdoabdoyytt5678@gmail.com",
-    subject: `🛍️ طلب جديد من ${user.name}`,
+  await sendEmail({
+    subject: `🛍️ New order from ${user.name}`,
     html: `
     <html dir="rtl">
       <head>
@@ -212,13 +194,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
       </body>
     </html>
   `,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-  } catch (err) {
-    return next(new ApiError("Failed to send email", 502));
-  }
+  });
 
   res.status(201).json({
     status: "success",

@@ -2,8 +2,8 @@ const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
 const { Maintenance } = require("../models/Maintenance_Model");
 const validateMaintenance = require("../validations/Maintenance.validation");
-const nodemailer = require("nodemailer");
 const { User } = require("../models/User_Model");
+const sendEmail = require("../utils/ApiEmail");
 
 /**
  * @desc   get all maintenances
@@ -67,25 +67,8 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
   });
   const user = await User.findById(userId);
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: true, // true for 465, false for other ports
-
-    tls: {
-      rejectUnauthorized: false, // ✅ تجاوز مشكلة الشهادة
-    },
-  });
-
-  const mailOptions = {
-    from: `My Company <${process.env.EMAIL_USER}>`,
-    to: "abdoabdoyytt5678@gmail.com",
-    subject: `🛍️ طلب صيانة جديد من ${user.name}`,
+  await sendEmail({
+    subject: `🛍️ New maintenance request from ${user.name}`,
     html: `
       <html dir="rtl">
         <head>
@@ -137,14 +120,7 @@ const createMaintenance = asyncHandler(async (req, res, next) => {
         </body>
       </html>
     `,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("📧 Email sent successfully");
-  } catch (err) {
-    console.error("❌ Error sending email:", err);
-  }
+  });
 
   res.status(201).send({
     data: maintenance,

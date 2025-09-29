@@ -3,7 +3,6 @@ const ApiError = require("../utils/ApiError");
 const { Order } = require("../models/Order_Model");
 const { User } = require("../models/User_Model");
 const { Cart } = require("../models/Cart_Model");
-const nodemailer = require("nodemailer");
 const axios = require("axios");
 // في موشكله في ال IFrame paymob انا مش عارف اجيبها
 const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
@@ -120,16 +119,9 @@ const createOrderCard = asyncHandler(async (req, res, next) => {
   const redirectURL = `https://accept.paymob.com/api/acceptance/iframes/${INTEGRATION_ID}?payment_token=${paymentToken}`;
 
   // Send confirmation email
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-    tls: { rejectUnauthorized: false },
-  });
 
-  const mailOptions = {
-    from: `My Company <${process.env.EMAIL_USER}>`,
-    to: "abdoabdoyytt5678@gmail.com",
-    subject: `🛍️ طلب جديد من ${user?.name}`,
+  await sendEmail({
+    subject: `🛍️ Prepaid order from ${user?.name}`,
     html: `
     <html dir="rtl">
       <head>
@@ -239,13 +231,7 @@ const createOrderCard = asyncHandler(async (req, res, next) => {
       </body>
     </html>
   `,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-  } catch (err) {
-    return next(new ApiError("Failed to send email", 502));
-  }
+  });
 
   res.status(201).json({
     status: "success",

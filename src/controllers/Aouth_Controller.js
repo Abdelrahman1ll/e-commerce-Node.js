@@ -1,6 +1,4 @@
-const {
-  User,
-} = require("../models/User_Model");
+const { User } = require("../models/User_Model");
 const {
   ValidationSignup,
   ValidationLogin,
@@ -9,8 +7,8 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const ApiError = require("../utils/ApiError");
-const nodemailer = require("nodemailer");
 const { OAuth2Client } = require("google-auth-library");
+const sendEmail = require("../utils/ApiEmail");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const sendVerificationEmail = async (id, email) => {
@@ -21,26 +19,15 @@ const sendVerificationEmail = async (id, email) => {
   // 2- لينك التحقق
   const verificationLink = `${process.env.BASE_URL}/api/auth/verify/${token}`;
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  const mailOptions = {
-    from: `"MyApp" <${process.env.EMAIL_USER}>`,
+  await sendEmail({
     to: email,
-    subject: "تفعيل حسابك",
+    subject: "Activate your account",
     html: `
-        <h3>مرحبا بك 🎉</h3>
-        <p>من فضلك اضغط على الرابط التالي لتفعيل حسابك:</p>
+        <h3>Welcome to our platform! 🎉</h3>
+        <p>Please click on the following link to activate your account:</p>
         <a href="${verificationLink}">${verificationLink}</a>
       `,
-  };
-
-  await transporter.sendMail(mailOptions);
+  });
 };
 
 /**
@@ -133,11 +120,13 @@ const signup = asyncHandler(async (req, res, next) => {
     phone,
     password,
   });
+
   try {
     await sendVerificationEmail(user._id, user.email);
   } catch {
     return next(new ApiError("Failed to send verification email", 502));
   }
+
   user.password = undefined;
 
   res.status(201).json({

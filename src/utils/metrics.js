@@ -1,8 +1,9 @@
 // // metrics.js
 
+const sendEmail = require("./ApiEmail");
+
 // const client = require('prom-client');
 // const os = require('os');
-// const nodemailer = require('nodemailer');
 
 // // ============================
 // // Prometheus Metrics
@@ -55,22 +56,11 @@
 // }
 
 // async function sendAlertEmail(usedMemPercent){
-//   const transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS,
-//       },
-//     });
 
-//   const mailOptions = {
-//     from: `"MyApp" <${process.env.EMAIL_USER}>`,
-//     to: 'abdoabdoyytt5678@gmail.com',
-//     subject: '⚠ Memory Usage Alert',
-//     text: `Memory usage is high: ${usedMemPercent.toFixed(2)}%`,
-//   };
-
-//     await transporter.sendMail(mailOptions);
+// await sendEmail({
+//   subject: "⚠ Memory Usage Alert",
+//   text: `Memory usage is high: ${usedMemPercent.toFixed(2)}%`,
+// });
 
 // }
 

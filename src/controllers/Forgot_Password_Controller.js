@@ -6,7 +6,7 @@ const {
 } = require("../validations/User.validation");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/ApiError");
-const nodemailer = require("nodemailer");
+const sendEmail = require("../utils/ApiEmail");
 
 /**
  * @desc    Send Reset Code
@@ -32,27 +32,11 @@ const sendResetCode = asyncHandler(async (req, res) => {
   user.resetCodeExpires = Date.now() + 2 * 60 * 1000;
   await user.save();
 
-  // إعداد nodemailer لإرسال الإيميل
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-
-    tls: {
-      rejectUnauthorized: false, // ✅ تجاوز مشكلة الشهادة
-    },
-  });
-
-  const mailOptions = {
-    from: `My Company <${process.env.EMAIL_USER}>`,
+  await sendEmail({
     to: user.email,
-    subject: "🔵 رمز إعادة تعيين كلمة المرور",
-    // text: `:رمز إعادة تعيين كلمة المرور الخاص بك هو ${resetCode}`,
-    html: `  <p> <span style="color: blue; font-weight: bold;"> ${resetCode}</span> :رمز إعادة تعيين كلمة المرور الخاص بك هو</p>`,
-  };
-  await transporter.sendMail(mailOptions);
+    subject: "🔵 Password reset code",
+    html: `  <p> <span style="color: blue; font-weight: bold;"> ${resetCode}</span> Your password reset code is: </p>`,
+  });
 
   res.status(200).json({
     message: "Reset code sent successfully!",
