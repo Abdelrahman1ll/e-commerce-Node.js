@@ -134,7 +134,7 @@ const createOrderCard = asyncHandler(async (req, res, next) => {
           <div style="margin-bottom: 15px;">
             <p style="margin: 0; font-weight: bold; color: #0073e6; display: inline-block; width: 150px;">رقم الطلب:</p>
             <p style="margin: 0; color: #555; display: inline-block;">${
-              order.orderNumber
+              order?.orderNumber
             }</p>
           </div>
           

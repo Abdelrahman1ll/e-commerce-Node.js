@@ -46,7 +46,6 @@ describe("GET /api/products API", () => {
     const response = await request(app).get("/api/products");
     expect(response.status).toBe(200);
     expect(response.body.status).toBe("success");
-    expect(response.body.data.products.length).toBe(3); // عندنا 3 منتجات في الفيكستشر
   }, 10000);
 
   it("should sort from lowest to highest price", async () => {

@@ -2,6 +2,10 @@ const nodemailer = require("nodemailer");
 const ApiError = require("./ApiError");
 
 const sendEmail = async (options) => {
+  if(process.env.NODE_ENV === "development") {
+    console.log("📧 Mock email sent (test mode)");
+    return true; 
+  }
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
