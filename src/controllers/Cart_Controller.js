@@ -63,7 +63,7 @@ const addToCart = asyncHandler(async (req, res, next) => {
   const parsedQuantity = parseInt(quantity);
 
   const product = await Product.findById(productId);
-  if (!product) {
+  if (!product || product.quantity < parsedQuantity) {
     return next(new ApiError("Product not available", 404));
   }
 
