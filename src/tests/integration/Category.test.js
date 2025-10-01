@@ -3,8 +3,6 @@ const app = require("../../app");
 const insertCategory = require("../fixtures/Category_Fixture");
 const mongoose = require("mongoose");
 const { Category } = require("../../models/Category_Model");
-const { User } = require("../../models/User_Model");
-// const connectTestDB = require("../utils/db_Test");
 const {
   createAndLoginAdmin,
   createAndLoginUser,
@@ -13,7 +11,6 @@ const {
 let accessToken;
 let category;
 beforeAll(async () => {
-  // await connectTestDB();
   accessToken = await createAndLoginAdmin();
   TokenUser = await createAndLoginUser();
 }, 20000); // 20 ثانية
@@ -23,12 +20,6 @@ beforeEach(async () => {
   await insertCategory();
   category = await Category.find();
 }, 20000);
-
-// afterAll(async () => {
-//   await Category.deleteMany({});
-//   await User.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
 
 describe("GET /api/categorys API", () => {
   it("should return all /api/categorys", async () => {

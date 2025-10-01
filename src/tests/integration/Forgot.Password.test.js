@@ -1,11 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
-const mongoose = require("mongoose");
 const { User } = require("../../models/User_Model");
-const connectTestDB = require("../utils/test-setup");
 beforeAll(async () => {
-  // await connectTestDB();
-
   await User.create({
     name: "Password User",
     lastName: "Password User",
@@ -17,11 +13,6 @@ beforeAll(async () => {
     resetCodeExpires: Date.now() + 2 * 60 * 1000,
   });
 }, 20000); // 20 ثانية
-
-// afterAll(async () => {
-//   await User.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
 
 describe("POST /api/forgot-password API", () => {
   it("should return 400 /api/forgot-password Not Email", async () => {

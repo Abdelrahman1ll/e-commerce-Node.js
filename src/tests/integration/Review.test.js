@@ -1,18 +1,14 @@
 const request = require("supertest");
-const mongoose = require("mongoose");
 const app = require("../../app");
 const { Review } = require("../../models/Review_Model");
 const { Product } = require("../../models/Product_Model");
 const { User } = require("../../models/User_Model");
 const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
-const connectTestDB = require("../utils/test-setup");
 
 let userToken, adminToken, product, user, admin, review;
 
 beforeAll(async () => {
-  // await connectTestDB();
-
   // Create normal user
   user = await User.create({
     name: "Test User",
@@ -65,15 +61,6 @@ beforeAll(async () => {
     price: 100,
   });
 });
-
-// afterAll(async () => {
-//   await Review.deleteMany();
-//   await Product.deleteMany();
-//   await Category.deleteMany();
-//   await Brand.deleteMany();
-//   await User.deleteMany();
-//   // await mongoose.connection.close();
-// });
 
 describe("Reviews", () => {
   describe("POST /api/reviews", () => {

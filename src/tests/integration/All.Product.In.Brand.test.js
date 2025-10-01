@@ -1,7 +1,5 @@
 const request = require("supertest");
 const app = require("../../app");
-const mongoose = require("mongoose");
-// const connectTestDB = require("../utils/db_Test");
 const { Brand } = require("../../models/Brand_Model");
 const { Product } = require("../../models/Product_Model");
 const { Category } = require("../../models/Category_Model");
@@ -9,10 +7,8 @@ let brandId;
 let productId;
 let categoryId;
 beforeAll(async () => {
-  // await connectTestDB();
-
   // إنشاء براند للتجارب
-  const brand = await Brand.create({ name: "Test Brand" });
+  const brand = await Brand.create({ name: "Test Brand_1" });
   brandId = brand._id;
 
   const category = await Category.create({ name: "Test category" });
@@ -31,19 +27,10 @@ beforeAll(async () => {
   productId = product._id;
 }, 20000); // 20 ثانية
 
-// afterAll(async () => {
-//   await Product.deleteMany({});
-//   await Brand.deleteMany({});
-//   await Category.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
-
 describe("GET /api/product-brand/:id API", () => {
   // ---------------- GET SUCCESS ----------------
   it("should return all products of a brand successfully", async () => {
-    const response = await request(app).get(
-      `/api/product-brand/${brandId}`
-    );
+    const response = await request(app).get(`/api/product-brand/${brandId}`);
 
     expect(response.status).toBe(200);
     expect(response.body.status).toBe("success");

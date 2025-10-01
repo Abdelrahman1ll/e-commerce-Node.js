@@ -5,8 +5,6 @@ const mongoose = require("mongoose");
 const { Product } = require("../../models/Product_Model");
 const { Brand } = require("../../models/Brand_Model");
 const { Category } = require("../../models/Category_Model");
-const { User } = require("../../models/User_Model");
-const connectTestDB = require("../utils/test-setup");
 const {
   createAndLoginAdmin,
   createAndLoginUser,
@@ -18,7 +16,6 @@ let categories;
 let TokenUser;
 let products;
 beforeAll(async () => {
-  // await connectTestDB();
   accessToken = await createAndLoginAdmin();
   TokenUser = await createAndLoginUser();
 }, 20000); // 20 ثانية
@@ -32,14 +29,6 @@ beforeEach(async () => {
   categories = await Category.find();
   products = await Product.find();
 }, 20000);
-
-// afterAll(async () => {
-//   await Product.deleteMany({});
-//   await Category.deleteMany({});
-//   await Brand.deleteMany({});
-//   await User.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
 
 describe("GET /api/products API", () => {
   it("should return all products", async () => {

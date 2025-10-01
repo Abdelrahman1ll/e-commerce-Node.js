@@ -1,11 +1,8 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../../app");
-const { Order } = require("../../models/Order_Model");
 const { User } = require("../../models/User_Model");
-const { Cart } = require("../../models/Cart_Model");
 const { Product } = require("../../models/Product_Model");
-const connectTestDB = require("../utils/test-setup");
 const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
 const { createAndLoginAdmin } = require("../utils/Auth_Helper");
@@ -17,7 +14,6 @@ let cart;
 let tokenAdmin;
 let orderid;
 beforeAll(async () => {
-  // await connectTestDB();
   tokenAdmin = await createAndLoginAdmin();
   await User.create({
     name: "Test User",
@@ -36,7 +32,7 @@ beforeAll(async () => {
   token = loginRes.body.accessToken;
 
   const category = await Category.create({ name: "Test category Orders" });
-  const brand = await Brand.create({ name: "Test Brand Orders" });
+  const brand = await Brand.create({ name: " Orders" });
 
   product = await Product.create({
     title: "test",
@@ -53,16 +49,6 @@ beforeAll(async () => {
     .set("Authorization", `Bearer ${token}`)
     .send({ productId: product._id, quantity: 2 });
 }, 20000);
-
-// afterAll(async () => {
-//   await User.deleteMany({});
-//   await Product.deleteMany({});
-//   await Cart.deleteMany({});
-//   await Order.deleteMany({});
-//   await Category.deleteMany({});
-//   await Brand.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
 
 describe("Orders API", () => {
   describe("POST /api/orders", () => {

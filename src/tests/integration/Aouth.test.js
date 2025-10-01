@@ -1,18 +1,8 @@
 const request = require("supertest");
 const app = require("../../app");
-const mongoose = require("mongoose");
 const { User } = require("../../models/User_Model");
-// const connectTestDB = require("../utils/db_Test");
 const jwt = require("jsonwebtoken");
 const { createAndLoginUser } = require("../utils/Auth_Helper");
-beforeAll(async () => {
-  // await connectTestDB();
-}, 20000); // 20 ثانية
-
-// afterAll(async () => {
-//   await User.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
 
 describe("POST /api/auth/signup-google API", () => {
   beforeEach(() => {
@@ -28,11 +18,9 @@ describe("POST /api/auth/signup-google API", () => {
     );
   });
   it("should sign up a user via Google and return success", async () => {
-    const res = await request(app)
-      .post("/api/auth/signup-google")
-      .send({
-        token: process.env.SIGNUP_GOOGLE_TEST,
-      });
+    const res = await request(app).post("/api/auth/signup-google").send({
+      token: process.env.SIGNUP_GOOGLE_TEST,
+    });
     expect(res.status).toBe(200);
     expect(res.body.status).toBe("success");
   });

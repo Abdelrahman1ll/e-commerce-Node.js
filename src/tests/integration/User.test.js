@@ -2,7 +2,6 @@ const request = require("supertest");
 const app = require("../../app");
 const mongoose = require("mongoose");
 const { User } = require("../../models/User_Model");
-const connectTestDB = require("../utils/test-setup");
 const {
   createAndLoginAdmin,
   createAndLoginUser,
@@ -12,7 +11,6 @@ let accessToken;
 let TokenUser;
 let ResLoginPassword;
 beforeAll(async () => {
-  // await connectTestDB();
   accessToken = await createAndLoginAdmin();
   TokenUser = await createAndLoginUser();
 
@@ -31,11 +29,6 @@ beforeAll(async () => {
     password: "OldPass123",
   });
 }, 20000); // 20 ثانية
-
-// afterAll(async () => {
-//   await User.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
 
 describe("GET /api/users API", () => {
   it("should GET all /api/users", async () => {

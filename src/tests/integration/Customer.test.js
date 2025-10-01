@@ -2,7 +2,6 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../../app"); // لازم يكون عندك export للـ app
 const { Customer } = require("../../models/Off_Site_Customers_Model");
-const connectTestDB = require("../utils/test-setup");
 const {
   createAndLoginAdmin,
   createAndLoginUser,
@@ -11,15 +10,9 @@ let adminToken;
 let userToken;
 
 beforeAll(async () => {
-  // await connectTestDB();
   adminToken = await createAndLoginAdmin();
   userToken = await createAndLoginUser();
 });
-
-// afterAll(async () => {
-//   await Customer.deleteMany();
-//   // await mongoose.connection.close();
-// });
 
 describe("Customers API Endpoints", () => {
   describe("GET /api/customers", () => {

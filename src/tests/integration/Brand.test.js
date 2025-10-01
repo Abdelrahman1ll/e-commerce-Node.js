@@ -3,8 +3,6 @@ const app = require("../../app");
 const insertBrand = require("../fixtures/Brand_Fixture");
 const mongoose = require("mongoose");
 const { Brand } = require("../../models/Brand_Model");
-const { User } = require("../../models/User_Model");
-// const connectTestDB = require("../utils/db_Test");
 const {
   createAndLoginAdmin,
   createAndLoginUser,
@@ -13,7 +11,6 @@ const {
 let accessToken;
 let brands;
 beforeAll(async () => {
-  // await connectTestDB();
   accessToken = await createAndLoginAdmin();
   TokenUser = await createAndLoginUser();
 }, 20000); // 20 ثانية
@@ -23,12 +20,6 @@ beforeEach(async () => {
   await insertBrand();
   brands = await Brand.find();
 }, 20000);
-
-// afterAll(async () => {
-//   await Brand.deleteMany({});
-//   await User.deleteMany({});
-//   // await mongoose.connection.close();
-// }, 20000);
 
 describe("GET /api/brands API", () => {
   it("should return all /api/brands", async () => {

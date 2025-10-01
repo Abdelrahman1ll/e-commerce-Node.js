@@ -5,14 +5,12 @@ const { Cart } = require("../../models/Cart_Model");
 const { Product } = require("../../models/Product_Model");
 const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
-// const connectTestDB = require("../utils/db_Test");
 const { createAndLoginUser } = require("../utils/Auth_Helper");
 const { User } = require("../../models/User_Model");
 
 let product;
 let userToken;
 beforeAll(async () => {
-  // await connectTestDB();
   await User.deleteMany();
   userToken = await createAndLoginUser();
   const category = await Category.create({ name: "Test category Cart" });
@@ -28,15 +26,6 @@ beforeAll(async () => {
     category: category._id,
   });
 });
-
-// afterAll(async () => {
-//   await Cart.deleteMany();
-//   await Product.deleteMany();
-//   await User.deleteMany();
-//   await Category.deleteMany();
-//   await Brand.deleteMany();
-//   // await mongoose.connection.close();
-// });
 
 describe("Cart API Endpoints", () => {
   describe("POST /api/carts (addToCart)", () => {
@@ -136,7 +125,7 @@ describe("Cart API Endpoints", () => {
 
   describe("DELETE /api/carts/:id (removeCartProduct)", () => {
     it("should remove product from cart", async () => {
-     const addRes = await request(app)
+      const addRes = await request(app)
         .post("/api/carts")
         .set("Authorization", "Bearer " + userToken)
         .send({ productId: product._id, quantity: 2 });
