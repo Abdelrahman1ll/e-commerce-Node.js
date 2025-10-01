@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 const mongoose = require("mongoose");
-const connectTestDB = require("../utils/db_Test");
+// const connectTestDB = require("../utils/db_Test");
 const { Brand } = require("../../models/Brand_Model");
 const { Product } = require("../../models/Product_Model");
 const { Category } = require("../../models/Category_Model");
@@ -9,7 +9,7 @@ let brandId;
 let productId;
 let categoryId;
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
 
   // إنشاء براند للتجارب
   const brand = await Brand.create({ name: "Test Brand" });
@@ -35,7 +35,7 @@ afterAll(async () => {
   await Product.deleteMany({});
   await Brand.deleteMany({});
   await Category.deleteMany({});
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 }, 20000);
 
 describe("GET /api/product-brand/:id API", () => {

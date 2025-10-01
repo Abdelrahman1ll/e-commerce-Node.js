@@ -17,7 +17,7 @@ let cart;
 let tokenAdmin;
 let orderid;
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
   tokenAdmin = await createAndLoginAdmin();
   await User.create({
     name: "Test User",
@@ -61,7 +61,7 @@ afterAll(async () => {
   await Order.deleteMany({});
   await Category.deleteMany({});
   await Brand.deleteMany({});
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 }, 20000);
 
 describe("Orders API", () => {

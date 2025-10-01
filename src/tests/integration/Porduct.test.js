@@ -18,7 +18,7 @@ let categories;
 let TokenUser;
 let products;
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
   accessToken = await createAndLoginAdmin();
   TokenUser = await createAndLoginUser();
 }, 20000); // 20 ثانية
@@ -38,7 +38,7 @@ afterAll(async () => {
   await Category.deleteMany({});
   await Brand.deleteMany({});
   await User.deleteMany({});
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 }, 20000);
 
 describe("GET /api/products API", () => {

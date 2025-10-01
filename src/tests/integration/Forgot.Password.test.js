@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const { User } = require("../../models/User_Model");
 const connectTestDB = require("../utils/db_Test");
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
 
   await User.create({
     name: "Password User",
@@ -20,7 +20,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await User.deleteMany({});
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 }, 20000);
 
 describe("POST /api/forgot-password API", () => {

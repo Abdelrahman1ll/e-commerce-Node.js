@@ -12,7 +12,7 @@ let accessToken;
 let TokenUser;
 let ResLoginPassword;
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
   accessToken = await createAndLoginAdmin();
   TokenUser = await createAndLoginUser();
 
@@ -34,7 +34,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await User.deleteMany({});
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 }, 20000);
 
 describe("GET /api/users API", () => {

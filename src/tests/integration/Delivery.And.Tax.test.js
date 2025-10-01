@@ -7,14 +7,14 @@ const { User } = require("../../models/User_Model");
 const { createAndLoginAdmin } = require("../utils/Auth_Helper");
 let accessToken;
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
   accessToken = await createAndLoginAdmin();
 });
 
 afterAll(async () => {
   await DeliveryTax.deleteMany({});
   await User.deleteMany({});
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 });
 
 describe("POST /api/delivery-tax API", () => {

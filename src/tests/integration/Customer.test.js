@@ -11,14 +11,14 @@ let adminToken;
 let userToken;
 
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
   adminToken = await createAndLoginAdmin();
   userToken = await createAndLoginUser();
 });
 
 afterAll(async () => {
   await Customer.deleteMany();
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 });
 
 describe("Customers API Endpoints", () => {

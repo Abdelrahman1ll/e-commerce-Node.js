@@ -13,7 +13,7 @@ let userToken;
 let adminToken;
 
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
   adminToken = await createAndLoginAdmin();
   userToken = await createAndLoginUser();
 });
@@ -21,7 +21,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await User.deleteMany({});
   await Maintenance.deleteMany({});
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 });
 
 //

@@ -5,14 +5,14 @@ const { Cart } = require("../../models/Cart_Model");
 const { Product } = require("../../models/Product_Model");
 const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
-const connectTestDB = require("../utils/db_Test");
+// const connectTestDB = require("../utils/db_Test");
 const { createAndLoginUser } = require("../utils/Auth_Helper");
 const { User } = require("../../models/User_Model");
 
 let product;
 let userToken;
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
   await User.deleteMany();
   userToken = await createAndLoginUser();
   const category = await Category.create({ name: "Test category Cart" });
@@ -35,7 +35,7 @@ afterAll(async () => {
   await User.deleteMany();
   await Category.deleteMany();
   await Brand.deleteMany();
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 });
 
 describe("Cart API Endpoints", () => {

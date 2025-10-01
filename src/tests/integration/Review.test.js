@@ -11,7 +11,7 @@ const connectTestDB = require("../utils/db_Test");
 let userToken, adminToken, product, user, admin, review;
 
 beforeAll(async () => {
-  await connectTestDB();
+  // await connectTestDB();
 
   // Create normal user
   user = await User.create({
@@ -72,7 +72,7 @@ afterAll(async () => {
   await Category.deleteMany();
   await Brand.deleteMany();
   await User.deleteMany();
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 });
 
 describe("Reviews", () => {
