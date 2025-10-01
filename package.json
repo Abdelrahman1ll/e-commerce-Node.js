@@ -70,7 +70,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/src/tests/utils/db_Test.js"
+      "<rootDir>/src/tests/utils/test-setup.js"
     ]
   }
 }

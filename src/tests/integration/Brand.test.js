@@ -24,11 +24,11 @@ beforeEach(async () => {
   brands = await Brand.find();
 }, 20000);
 
-afterAll(async () => {
-  await Brand.deleteMany({});
-  await User.deleteMany({});
-  // await mongoose.connection.close();
-}, 20000);
+// afterAll(async () => {
+//   await Brand.deleteMany({});
+//   await User.deleteMany({});
+//   // await mongoose.connection.close();
+// }, 20000);
 
 describe("GET /api/brands API", () => {
   it("should return all /api/brands", async () => {

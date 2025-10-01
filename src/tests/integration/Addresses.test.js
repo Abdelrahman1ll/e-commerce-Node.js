@@ -24,10 +24,10 @@ beforeAll(async () => {
   });
 }, 20000); // 20 ثانية
 
-afterAll(async () => {
-  await User.deleteMany({});
-  // await mongoose.connection.close();
-}, 20000);
+// afterAll(async () => {
+//   await User.deleteMany({});
+//   // await mongoose.connection.close();
+// }, 20000);
 
 describe("POST /api/addresses API", () => {
   it("should create a new address", async () => {

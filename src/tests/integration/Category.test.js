@@ -24,11 +24,11 @@ beforeEach(async () => {
   category = await Category.find();
 }, 20000);
 
-afterAll(async () => {
-  await Category.deleteMany({});
-  await User.deleteMany({});
-  // await mongoose.connection.close();
-}, 20000);
+// afterAll(async () => {
+//   await Category.deleteMany({});
+//   await User.deleteMany({});
+//   // await mongoose.connection.close();
+// }, 20000);
 
 describe("GET /api/categorys API", () => {
   it("should return all /api/categorys", async () => {

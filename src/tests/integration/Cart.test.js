@@ -29,14 +29,14 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await Cart.deleteMany();
-  await Product.deleteMany();
-  await User.deleteMany();
-  await Category.deleteMany();
-  await Brand.deleteMany();
-  // await mongoose.connection.close();
-});
+// afterAll(async () => {
+//   await Cart.deleteMany();
+//   await Product.deleteMany();
+//   await User.deleteMany();
+//   await Category.deleteMany();
+//   await Brand.deleteMany();
+//   // await mongoose.connection.close();
+// });
 
 describe("Cart API Endpoints", () => {
   describe("POST /api/carts (addToCart)", () => {

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const app = require("../../app");
 const { User } = require("../../models/User_Model");
 const { Maintenance } = require("../../models/Maintenance_Model");
-const connectTestDB = require("../utils/db_Test");
+const connectTestDB = require("../utils/test-setup");
 const {
   createAndLoginUser,
   createAndLoginAdmin,
@@ -18,11 +18,11 @@ beforeAll(async () => {
   userToken = await createAndLoginUser();
 });
 
-afterAll(async () => {
-  await User.deleteMany({});
-  await Maintenance.deleteMany({});
-  // await mongoose.connection.close();
-});
+// afterAll(async () => {
+//   await User.deleteMany({});
+//   await Maintenance.deleteMany({});
+//   // await mongoose.connection.close();
+// });
 
 //
 // 🟢 POST /api/maintenances

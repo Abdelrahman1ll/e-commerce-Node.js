@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 const mongoose = require("mongoose");
-const connectTestDB = require("../utils/db_Test");
+const connectTestDB = require("../utils/test-setup");
 const { DeliveryTax } = require("../../models/Delivery_And_Tax_Model");
 const { User } = require("../../models/User_Model");
 const { createAndLoginAdmin } = require("../utils/Auth_Helper");
@@ -11,11 +11,11 @@ beforeAll(async () => {
   accessToken = await createAndLoginAdmin();
 });
 
-afterAll(async () => {
-  await DeliveryTax.deleteMany({});
-  await User.deleteMany({});
-  // await mongoose.connection.close();
-});
+// afterAll(async () => {
+//   await DeliveryTax.deleteMany({});
+//   await User.deleteMany({});
+//   // await mongoose.connection.close();
+// });
 
 describe("POST /api/delivery-tax API", () => {
   // ---------------- CREATE NEW ----------------

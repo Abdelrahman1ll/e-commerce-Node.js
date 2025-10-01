@@ -6,7 +6,7 @@ const { Product } = require("../../models/Product_Model");
 const { User } = require("../../models/User_Model");
 const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
-const connectTestDB = require("../utils/db_Test");
+const connectTestDB = require("../utils/test-setup");
 
 let userToken, adminToken, product, user, admin, review;
 
@@ -66,14 +66,14 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await Review.deleteMany();
-  await Product.deleteMany();
-  await Category.deleteMany();
-  await Brand.deleteMany();
-  await User.deleteMany();
-  // await mongoose.connection.close();
-});
+// afterAll(async () => {
+//   await Review.deleteMany();
+//   await Product.deleteMany();
+//   await Category.deleteMany();
+//   await Brand.deleteMany();
+//   await User.deleteMany();
+//   // await mongoose.connection.close();
+// });
 
 describe("Reviews", () => {
   describe("POST /api/reviews", () => {

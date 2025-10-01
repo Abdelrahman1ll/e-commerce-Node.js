@@ -5,7 +5,7 @@ const { Order } = require("../../models/Order_Model");
 const { User } = require("../../models/User_Model");
 const { Cart } = require("../../models/Cart_Model");
 const { Product } = require("../../models/Product_Model");
-const connectTestDB = require("../utils/db_Test");
+const connectTestDB = require("../utils/test-setup");
 const { Category } = require("../../models/Category_Model");
 const { Brand } = require("../../models/Brand_Model");
 const { createAndLoginAdmin } = require("../utils/Auth_Helper");
@@ -54,15 +54,15 @@ beforeAll(async () => {
     .send({ productId: product._id, quantity: 2 });
 }, 20000);
 
-afterAll(async () => {
-  await User.deleteMany({});
-  await Product.deleteMany({});
-  await Cart.deleteMany({});
-  await Order.deleteMany({});
-  await Category.deleteMany({});
-  await Brand.deleteMany({});
-  // await mongoose.connection.close();
-}, 20000);
+// afterAll(async () => {
+//   await User.deleteMany({});
+//   await Product.deleteMany({});
+//   await Cart.deleteMany({});
+//   await Order.deleteMany({});
+//   await Category.deleteMany({});
+//   await Brand.deleteMany({});
+//   // await mongoose.connection.close();
+// }, 20000);
 
 describe("Orders API", () => {
   describe("POST /api/orders", () => {

@@ -20,6 +20,14 @@ beforeAll(async () => {
   });
 });
 
+afterEach(async () => {
+  // تنظيف البيانات بعد كل Test
+  const collections = await mongoose.connection.db.collections();
+  for (let collection of collections) {
+    await collection.deleteMany({});
+  }
+});
+
 afterAll(async () => {
   // بعد ما يخلص كل الـ tests
   await mongoose.connection.close();

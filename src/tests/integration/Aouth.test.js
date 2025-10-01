@@ -9,10 +9,10 @@ beforeAll(async () => {
   // await connectTestDB();
 }, 20000); // 20 ثانية
 
-afterAll(async () => {
-  await User.deleteMany({});
-  // await mongoose.connection.close();
-}, 20000);
+// afterAll(async () => {
+//   await User.deleteMany({});
+//   // await mongoose.connection.close();
+// }, 20000);
 
 describe("POST /api/auth/signup-google API", () => {
   beforeEach(() => {

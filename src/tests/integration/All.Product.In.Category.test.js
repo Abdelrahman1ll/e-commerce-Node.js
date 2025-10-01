@@ -31,12 +31,12 @@ beforeAll(async () => {
   productId = product._id;
 }, 20000); // 20 ثانية
 
-afterAll(async () => {
-  await Product.deleteMany({});
-  await Brand.deleteMany({});
-  await Category.deleteMany({});
-  // await mongoose.connection.close();
-}, 20000);
+// afterAll(async () => {
+//   await Product.deleteMany({});
+//   await Brand.deleteMany({});
+//   await Category.deleteMany({});
+//   // await mongoose.connection.close();
+// }, 20000);
 
 describe("GET /api/product-category/:id API", () => {
   // ---------------- GET SUCCESS ----------------
