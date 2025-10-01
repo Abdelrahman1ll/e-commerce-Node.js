@@ -11,7 +11,7 @@ beforeAll(async () => {
   const brand = await Brand.create({ name: "Test Brand_2" });
   brandId = brand._id;
 
-  const category = await Category.create({ name: "Test category" });
+  const category = await Category.create({ name: "Test category-2" });
   categoryId = category._id;
 
   // إنشاء منتج تابع للبراند
